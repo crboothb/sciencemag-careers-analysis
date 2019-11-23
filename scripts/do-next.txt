@@ -1,0 +1,7 @@
+Do next:
+
+Fuzzy string matching for merging tags with editorials by headline
+* https://stackoverflow.com/questions/13636848/is-it-possible-to-do-fuzzy-match-merge-with-python-pandas
+* https://www.geeksforgeeks.org/fuzzywuzzy-python-library/
+* https://www.datacamp.com/community/tutorials/fuzzy-string-python
+

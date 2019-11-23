@@ -1,4 +1,5 @@
-
+import ast
+import pandas as pd
 
 # import .jl files. Works fine for both ediorial and tags
 # takes path+filename as string as filename argument
@@ -16,7 +17,16 @@ def import_jl(filename):
 # takes list of lines in original file as list argument
 # takes "editorial" or "tags" as focus argument to indicate whether it's the editorial or tags
 
-def editorial_process(list, focus):
+def process(list, focus):
+    
+    list_temp1 = []
+    for line in list:
+        if "null" in line:
+            line = line.replace("null", "\'null\'")
+        line = ast.literal_eval(line.lower())
+        list_temp1.append(line)
+    list = list_temp1
+
     if focus == "editorial":
         editorial_dict = {"headline":[], "preview":[],"authors":[],"date":[] }
 
@@ -25,11 +35,7 @@ def editorial_process(list, focus):
                 "What do we know about Ph.D. scientists’ career paths?",
                 "Three lessons from industry that I’m taking back to academia"
                 ]
-
         for line in list:
-            if "null" in line:
-                line = line.replace("null", "\'null\'")
-            line = ast.literal_eval(line)
             if line["text"].replace("\n","")  in sidebar:
                 if line["preview"] == "null":
                     continue
@@ -43,7 +49,6 @@ def editorial_process(list, focus):
             editorial_dict["authors"].append(au)
             editorial_dict["date"].append(line["byline"].replace("<",">").split(">")[-5].replace(". ","-").replace(", ","-").replace(" ","").replace(",",""))
 
-
         editorial_df = pd.DataFrame(editorial_dict)
         editorial_df["date"] = pd.to_datetime(editorial_df.date, format='%b-%d-%Y')
         editorial_df.sort_values(by=["date"], inplace=True)
@@ -51,14 +56,13 @@ def editorial_process(list, focus):
         out_dict = editorial_dict
     
     elif focus == "tags":
-            tags_dict = {"headline":[],"tags":[],"authors":[],"date":[],"time":[] }
+        tags_dict = {"headline":[],"tags":[],"authors":[],"date":[],"time":[] }
 
-    #print(editorial_list[1])
 
-    for line in list:
-        if "null" in line:
-            line = line.replace("null", "\'null\'")
-            line = ast.literal_eval(line)
+        for line in list:
+        # if "null" in line:
+        #     line = line.replace("null", "\'null\'")
+        #     line = ast.literal_eval(line)
 
             head = line["headline"].replace("\n","").replace("\"","")
             tags_dict["headline"].append(head)
@@ -117,6 +121,29 @@ def editorial_process(list, focus):
         tags_df.sort_values(by=["date"], inplace=True)
         out_df = tags_df
         out_dict = tags_dict
-
-    
+  
     return [out_df, out_dict]
+
+# Why am I doing this? I'm trying to calculate the months from the date_seq 
+# Right now, this function returns a sequence from the actual start of the publications to the most recent publications
+# I would want later versions of this to be more flexible--maybe allowing the start and end times to be set in the function?
+
+def cumulative():
+    months_r = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    months_l = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+    # I need a list of cumulative days at the end of each month going forward
+    cumulative_days = [31, 61, 92]
+    cumulative_months = [13]
+
+    for year in range(1997,2021):
+        cumulative_months.append(cumulative_months[-1] + 12)
+        if year%4 == 0:
+            months = months_l
+        else:
+            months = months_r
+        for month in range(1,13):
+            #print(year, month)
+            #print(months[month-1])
+            cumulative_days.append(cumulative_days[-1]+months[month-1])
+    return(cumulative_days, cumulative_months)
