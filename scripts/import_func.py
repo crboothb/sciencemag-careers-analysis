@@ -1,5 +1,11 @@
 import ast
 import pandas as pd
+import numpy as np
+
+#### Import Functions ####
+## These functions import and do the initial data processing,
+## and they assemble the working dataframes
+
 
 # import .jl files. Works fine for both ediorial and tags
 # takes path+filename as string as filename argument
@@ -16,6 +22,7 @@ def import_jl(filename):
 # initially process content from imported jl files
 # takes list of lines in original file as list argument
 # takes "editorial" or "tags" as focus argument to indicate whether it's the editorial or tags
+# I think this one handles the dates and the items in the dates column are datetime objects
 
 def process(list, focus):
     
@@ -30,10 +37,10 @@ def process(list, focus):
     if focus == "editorial":
         editorial_dict = {"headline":[], "preview":[],"authors":[],"date":[] }
 
-        sidebar = ["How to keep a lab notebook",
-                "Grad student unions dealt blow as proposed new rule says students aren’t ‘employees’",
-                "What do we know about Ph.D. scientists’ career paths?",
-                "Three lessons from industry that I’m taking back to academia"
+        sidebar = ["how to keep a lab notebook",
+                "grad student unions dealt blow as proposed new rule says students aren’t ‘employees’",
+                "what do we know about ph.d. scientists’ career paths?",
+                "three lessons from industry that i’m taking back to academia"
                 ]
         for line in list:
             if line["text"].replace("\n","")  in sidebar:
@@ -147,3 +154,77 @@ def cumulative():
             #print(months[month-1])
             cumulative_days.append(cumulative_days[-1]+months[month-1])
     return(cumulative_days, cumulative_months)
+
+# need to add appropriate cumulative columns to the dataframes
+# takes the dataframe
+# focus indicates whether it's "tags" or "editoral"
+# calls cumulative() on its own--don't worry about it
+
+def seq_dates(df, focus):
+
+    cumul_both = cumulative()
+    cumulative_days = cumul_both[0]
+    cumulative_months = cumul_both[1]
+
+    df["start"] = min(df["date"])
+    df["date_seq"] = df["date"] - df["start"]
+    df["date_seq"] = df["date_seq"].map(lambda x: str(x)[:-14])
+    df["date_seq"] = df["date_seq"].astype(int)
+    df["date_seq"] = df["date_seq"] + 18
+    m_seq = []
+    for n_days in df["date_seq"]:
+        for days in cumulative_days:
+            if n_days < days:
+                month = cumulative_days.index(days)
+                m_seq.append(month + 10)
+                break
+    df["month_seq"] = m_seq
+    y_seq = []
+    for n_months in df["month_seq"]:
+        for months in cumulative_months:
+            if n_months < months:
+                year = cumulative_months.index(months)
+                y_seq.append(year + 1996)
+                break
+    df["year"] = y_seq
+    # remove unnecessary columns after manipulation
+    df.drop("start", axis=1, inplace=True)
+
+    return(df)
+
+# for counting the number of times each author publishes
+# takes the dataframe
+# returns either a 2 column dataframe with the author and count only "count"
+# or the full dataframe with the number of times author has published appended "full"
+# ^^^ indicated by output argument 
+
+def author_num(df, output):
+    authors = df["authors"].value_counts()
+    authors_df = pd.DataFrame(authors)
+    
+    if output == "count":
+        return(authors_df)
+    
+    authors_df["writer"] = authors_df.index
+    authors_df = authors_df.rename(columns={"authors": "n_posts_author"})
+    tags_authors = pd.merge(df, authors_df, left_on = "authors", right_on = "writer")
+    tags_authors.drop("writer", axis = 1, inplace=True)
+
+    if output == "full":
+        return(tags_authors)
+
+# for identifying which articles are columns
+# takes the dataframe
+# requires the tags column in order to work
+# theshold indicates the number of articles written by author required to consider it a column
+# theshold's default value is 4
+
+def id_columns(df, threshold = 5):
+    df_authors = author_num(df, "full")
+
+    df_authors["column1"] = ["yes" if "column" in x else "no" for x in df["tags"]]
+    df_authors["column2"] = np.where((df_authors["n_posts_author"] >= threshold) | (df_authors["column1"] == "yes"), "yes", "no")
+
+    return(df_authors)
+
+

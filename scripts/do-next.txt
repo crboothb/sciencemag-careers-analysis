@@ -1,5 +1,9 @@
 Do next:
 
+function for making aggregate graphs
+
+assemble dictionary showing incidence for different tags
+
 Fuzzy string matching for merging tags with editorials by headline
 * https://stackoverflow.com/questions/13636848/is-it-possible-to-do-fuzzy-match-merge-with-python-pandas
 * https://www.geeksforgeeks.org/fuzzywuzzy-python-library/
