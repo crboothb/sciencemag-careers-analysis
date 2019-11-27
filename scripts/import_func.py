@@ -227,4 +227,8 @@ def id_columns(df, threshold = 5):
 
     return(df_authors)
 
-
+def one_time(df, theshold = 1):
+    if "column1" not in df.columns.values:
+        df = id_columns(df)
+    onetime_df = df[(df["n_posts_author"] == 1) & (df["column2"] == "no")]
+    return(onetime_df)

@@ -1,18 +1,18 @@
 import import_func as imp
+import tags_work as tgs
 import desc_vis as vis
-import seaborn as sns
 
 elist = "../data/editorials-1.jl"
 tags = "../data/by_article_110219.jl"
 
-editorial = imp.import_jl(elist)
+# editorial = imp.import_jl(elist)
 tags = imp.import_jl(tags)
 
-out_edi = imp.process(editorial, "editorial")
+# out_edi = imp.process(editorial, "editorial")
 out_tag = imp.process(tags, "tags")
 
-edi_df = out_edi[0]
-edi_dict = out_edi[1]
+# edi_df = out_edi[0]
+# edi_dict = out_edi[1]
 
 tag_df = out_tag[0]
 tag_dict = out_tag[1]
@@ -31,12 +31,16 @@ tag_dict = out_tag[1]
 # print(cumulative[0])
 # print(cumulative[1])
 
-edi_df = imp.seq_dates(edi_df, "editorial")
+# edi_df = imp.seq_dates(edi_df, "editorial")
 tag_df = imp.seq_dates(tag_df, "tags")
 
 # print(edi_df.head())
 # print(tag_df.head())
 
-authors_test = imp.id_columns(tag_df, 5)
+columns = imp.id_columns(tag_df)
+columns = tgs.seperate_tags(columns)
 
-print(authors_test.head(10))
+inc_dict = tgs.tag_incidence(columns)
+
+for key in inc_dict.keys():
+    print(key, inc_dict[key])
