@@ -28,6 +28,8 @@ def process(list, focus):
     
     list_temp1 = []
     for line in list:
+        if focus == "tags":
+            line = line.replace("Read more ","")
         if "null" in line:
             line = line.replace("null", "\'null\'")
         line = ast.literal_eval(line.lower())
@@ -77,6 +79,7 @@ def process(list, focus):
             tags = line["tags"]
             unique_tags = []
             for tag in tags:
+                #tag.replace("read more ","")
                 if tag not in unique_tags:
                     unique_tags.append(tag)
             tags = unique_tags
