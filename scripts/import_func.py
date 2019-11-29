@@ -165,10 +165,6 @@ def cumulative():
 
 def seq_dates(df, focus):
 
-    cumul_both = cumulative()
-    cumulative_days = cumul_both[0]
-    cumulative_months = cumul_both[1]
-
     df["start"] = min(df["date"])
     df["date_seq"] = df["date"] - df["start"]
     df["date_seq"] = df["date_seq"].map(lambda x: str(x)[:-14])
@@ -176,24 +172,39 @@ def seq_dates(df, focus):
     df["date_seq"] = df["date_seq"] + 18
     m_seq = []
     for n_days in df["date_seq"]:
-        for days in cumulative_days:
-            if n_days < days:
-                month = cumulative_days.index(days)
-                m_seq.append(month + 10)
-                break
+        m_seq.append(cumul_to(n_days,"d"))
     df["month_seq"] = m_seq
     y_seq = []
     for n_months in df["month_seq"]:
-        for months in cumulative_months:
-            if n_months < months:
-                year = cumulative_months.index(months)
-                y_seq.append(year + 1996)
-                break
+        y_seq.append(cumul_to(n_months,"m"))
+
     df["year"] = y_seq
+
+
     # remove unnecessary columns after manipulation
     df.drop("start", axis=1, inplace=True)
 
     return(df)
+
+def cumul_to(n, unit):
+
+    cumul_both = cumulative()
+    cumulative_days = cumul_both[0]
+    cumulative_months = cumul_both[1]
+
+    if unit in ["m", "month","months"]:
+        for months in cumulative_months:
+            if n < months:
+                year = cumulative_months.index(months) + 1996
+                return(year)
+    elif unit in ["d","day","days"]:
+        for days in cumulative_days:
+            if n < days:
+                month = cumulative_days.index(days) + 10
+                return(month)
+    else:
+        print("error in imp.cumul_to_year: set unit argument to \"d\" for days or \"m\" for months")   
+
 
 # for counting the number of times each author publishes
 # takes the dataframe

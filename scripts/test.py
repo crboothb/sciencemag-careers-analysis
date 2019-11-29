@@ -33,6 +33,7 @@ tag_dict = out_tag[1]
 
 # edi_df = imp.seq_dates(edi_df, "editorial")
 tag_df = imp.seq_dates(tag_df, "tags")
+print(tag_df.tail(10))
 
 # print(edi_df.head())
 # print(tag_df.head())
@@ -40,7 +41,9 @@ tag_df = imp.seq_dates(tag_df, "tags")
 columns = imp.id_columns(tag_df)
 columns = tgs.seperate_tags(columns)
 
-inc_dict = tgs.tag_incidence(columns)
+inc_dict = tgs.tag_incidence(columns, lifespan = True, id_col_tag = True, binary = True)
 
-for key in inc_dict.keys():
-    print(key, inc_dict[key])
+# col_diffs = tgs.id_column_tags(inc_dict, binary=True)
+
+# print(len(inc_dict))
+# print(len(col_diffs))
