@@ -21,10 +21,10 @@ def import_jl(filename):
 
 # initially process content from imported jl files
 # takes list of lines in original file as list argument
-# takes "editorial" or "tags" as focus argument to indicate whether it's the editorial or tags
+# takes "editorial", "tags", or "full" as focus argument to indicate whether it's the editorial or tags
 # I think this one handles the dates and the items in the dates column are datetime objects
 
-def process(list, focus):
+def process(list, focus, out_form):
     
     list_temp1 = []
     for line in list:
@@ -58,15 +58,26 @@ def process(list, focus):
             editorial_dict["authors"].append(au)
             editorial_dict["date"].append(line["byline"].replace("<",">").split(">")[-5].replace(". ","-").replace(", ","-").replace(" ","").replace(",",""))
 
-        editorial_df = pd.DataFrame(editorial_dict)
-        editorial_df["date"] = pd.to_datetime(editorial_df.date, format='%b-%d-%Y')
-        editorial_df.sort_values(by=["date"], inplace=True)
-        out_df = editorial_df
-        out_dict = editorial_dict
+        if out_form == "df":
+            editorial_df = pd.DataFrame(editorial_dict)
+            editorial_df["date"] = pd.to_datetime(editorial_df.date, format='%b-%d-%Y')
+            editorial_df.sort_values(by=["date"], inplace=True)
+            out = editorial_df
+        elif out_form == "dict":
+            out = editorial_dict
+        elif out_form == "both":
+            editorial_df = pd.DataFrame(editorial_dict)
+            editorial_df["date"] = pd.to_datetime(editorial_df.date, format='%b-%d-%Y')
+            editorial_df.sort_values(by=["date"], inplace=True)
+            out1 = editorial_df
+            out2 = editorial_dict
+            out = [out1, out2]
     
-    elif focus == "tags":
-        tags_dict = {"headline":[],"tags":[],"authors":[],"date":[],"time":[] }
-
+    elif focus == "tags" or focus == "full":
+        if focus == "tags":
+            tags_dict = {"headline":[],"tags":[],"authors":[],"date":[],"time":[] }
+        else:
+            tags_dict = {"headline":[],"tags":[],"authors":[],"date":[],"time":[], "text": [], "bio":[] }
 
         for line in list:
         # if "null" in line:
@@ -111,8 +122,10 @@ def process(list, focus):
 
             num_authors = (len(line["byline"].replace("<",">").split(">"))-5)//4
             au = line["byline"].replace("<",">").split(">")[4]
+            au_list = [au]
             for i in range(2,num_authors):
                 au += ", " + line["byline"].replace("<",">").split(">")[i*4]
+                au_list.append(line["byline"].replace("<",">").split(">")[i*4])
             tags_dict["authors"].append(au)
 
             date_time = line["byline"].replace("<",">").split(">")[-5]
@@ -120,19 +133,59 @@ def process(list, focus):
             date = date_time[:-9].replace(". ","-").replace(", ","-").replace(" ","").replace(",","")
             tags_dict["date"].append(date)
             tags_dict["time"].append(time)
-
+            if focus == "full":
+                f_text_list = []
+                w_text_list = line["text"]
+                bio_text = []
+                for string in w_text_list:
+                    record = True
+                    # still not working :/
+                    # if string == '  by ':
+                    #     record = False
+                    # if string == ", ":
+                    #     record = False
+                    if "doi:" in string: # == '  by ' or string == 'enter keywords, locations or job types to start searching for your new science career.':
+                        record = False
+                    if au_list[0] in string:
+                        bio_text.append(string)
+                        record = False
+                    if "enter keywords, locations or job types" in string:
+                        break
+                    if record == True:
+                        f_text_list.append(string.replace("\n",""))
+                f_text = " ".join(f_text_list)
+                # print(w_text)
+                # print("#######################################")
+                # last 16 lines are junk
+                tags_dict["text"].append(f_text)
+                tags_dict["bio"].append(bio_text)
 
         #print(tags_dict)
+        if out_form == "df":
+            tags_df = pd.DataFrame(tags_dict)
+            tags_df.head()
+            tags_df["date"] = pd.to_datetime(tags_df.date, format='%b-%d-%Y')
+            tags_df["date"] = pd.to_datetime(tags_df["date"])
+            tags_df.sort_values(by=["date"], inplace=True)
+            out = tags_df
+        elif out_form == "dict":
+            out = tags_dict
+        elif out_form == "both":
+            tags_df = pd.DataFrame(tags_dict)
+            tags_df.head()
+            tags_df["date"] = pd.to_datetime(tags_df.date, format='%b-%d-%Y')
+            tags_df["date"] = pd.to_datetime(tags_df["date"])
+            tags_df.sort_values(by=["date"], inplace=True)
+            out1 = tags_df
+            out2 = tags_dict
+            out = [out1, out2]
+        else:
+            print("please enter third argument, \'out_form\' as \'df\',\'dict\', or \'both\' ")
 
-        tags_df = pd.DataFrame(tags_dict)
-        tags_df.head()
-        tags_df["date"] = pd.to_datetime(tags_df.date, format='%b-%d-%Y')
-        tags_df["date"] = pd.to_datetime(tags_df["date"])
-        tags_df.sort_values(by=["date"], inplace=True)
-        out_df = tags_df
-        out_dict = tags_dict
+    else:
+        print("please enter second argument \'focus\' as \'editorial\',\'tags\', or \'full\' ")
   
-    return [out_df, out_dict]
+    return(out)
 
 # Why am I doing this? I'm trying to calculate the months from the date_seq 
 # Right now, this function returns a sequence from the actual start of the publications to the most recent publications
