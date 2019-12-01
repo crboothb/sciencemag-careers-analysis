@@ -2,12 +2,24 @@ import import_func as imp
 import tags_work as tgs
 import desc_vis as vis
 import seaborn as sns
+import matplotlib as plt
 import random
 
-elist = "../data/editorials-1.jl"
-tags = "../data/by_article_110219.jl"
-full = "../data/by_article_fulltext_112919-2.jl"
-test_full = "../data/full_text.jl"
+elist_filename = "../data/editorials-1.jl"
+tags_filename = "../data/by_article_110219.jl"
+full_filename = "../data/by_article_fulltext_112919-2.jl"
+test_full_filename = "../data/full_text.jl"
+
+def init_df(filename, focus, test = False):
+    raw = imp.import_jl(filename)
+    out = imp.process(raw, focus = focus, out_form = "df")
+
+    df = out
+    df = imp.seq_dates(df, focus)
+    df = imp.id_columns(df)
+    if test == True:
+        print(df.head())
+    return(df)
 
 # editorial = imp.import_jl(elist)
 
@@ -25,21 +37,11 @@ test_full = "../data/full_text.jl"
 
 ## to import tags version ##
 
-tags = imp.import_jl(tags)
-out_tag = imp.process(tags, focus = "tags", out_form = "df")
-
-tag_df = out_tag
-tag_df = imp.seq_dates(tag_df, "tags")
-tag_df = imp.id_columns(tag_df)
-print(tag_df.head())
-
-sns.distplot(tag_df["date_seq"])
-plt.pyplot.show()
-
+tag_df = init_df(tags_filename, "tags")
 
 ###########
 
-## to examine full text ##
+## to import and examine full text ##
 
 # full = imp.import_jl(full)
 # out_full = imp.process(full, focus = "full", out_form = "dict")
@@ -61,14 +63,6 @@ plt.pyplot.show()
 #     print(out_full["date"][i])
 #     print(out_full["text"][i])
 
-# print(len(full))
-# for line in out_full["bio"]:
-#     print("#######")
-#     print(line)
-###########
-
-
-
 # print(out_full["text"][0][0])  
 # print("#####") 
 # print(out_full["text"][0][2])   
@@ -81,6 +75,30 @@ plt.pyplot.show()
 # print("#####") 
 # print(out_full["text"][0][6])   
 
+# print(len(full))
+# for line in out_full["bio"]:
+#     print("#######")
+#     print(line)
+###########
+
+## for calling and testing number of posts over time graphs
+
+# per_month_df = vis.prep_per(tag_df, group_by = "year", test = True)
+
+column = vis.dual_per(tag_df, split = "column2", group_by = "avg_month", test = True)
+
+column1 = column[0][0]
+column2 = column[1][0]
+
+column_df0 = vis.prep_per(column1, group_by = "year", color = "red", test = False)
+column_df1 = vis.prep_per(column2, group_by = "year", color = "blue", test = False)
+
+sns.lineplot(x = "year", y = "n", color = "red", data = column_df0) 
+sns.lineplot(x = "year", y = "n", color = "blue", data = column_df1) 
+plt.pyplot.show()
+
+
+###########
 
 
 # print(edi_df.head)
@@ -92,10 +110,6 @@ plt.pyplot.show()
 # print(len(tags))
 # print(len(edi_df)-len(tag_df))
 
-# cumulative = imp.cumulative()
-
-# print(cumulative[0])
-# print(cumulative[1])
 
 # edi_df = imp.seq_dates(edi_df, "editorial")
 
