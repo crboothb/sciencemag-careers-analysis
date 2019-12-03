@@ -6,7 +6,7 @@ class QuotesSpider(scrapy.Spider):
 
     def start_requests(self):
         urls_list = []
-        for i in range(1): #254
+        for i in range(254): #254
             urls_list.append("https://www.sciencemag.org/careers/articles?page="+str(i))
         #urls = ["https://www.sciencemag.org/careers/articles?page=10", "https://www.sciencemag.org/careers/articles?page=11", "https://www.sciencemag.org/careers/articles?page=12", "https://www.sciencemag.org/careers/articles?page=13"]
         for url in urls_list:
@@ -17,7 +17,8 @@ class QuotesSpider(scrapy.Spider):
         yield {
             "headline" : response.css("h1.article__headline::text").get(),
             "tags" : post.css("a::text").getall(),
-            "byline" : response.css("p.byline").get()
+            "byline" : response.css("p.byline").get(),
+            "text" : response.css("p::text").getall()
         }
 
     def parse(self, response):
