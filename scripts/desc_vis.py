@@ -43,7 +43,9 @@ def dual_per(df, split, test = False): # group_by,
         vals = df.column2.unique()
     colors = ["red", "blue"]
     w_dfs = []
+    #order = []
     for i in range(len(vals)):
+        #order.append(vals[i])
         if split == "column2":
             w_df = df[df.column2 == vals[i]]
         # w_df = prep_per(w_df, group_by, test, colors[i])
