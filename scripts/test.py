@@ -16,28 +16,17 @@ def init_df(filename, focus, test = False):
 
     df = out
     df = imp.seq_dates(df, focus)
-    df = imp.id_columns(df)
+    if focus != "editorial":
+        df = imp.id_columns(df)
     if test == True:
         print(df.head())
     return(df)
 
-# editorial = imp.import_jl(elist)
-
-
-# out_edi = imp.process(editorial, "editorial")
-
-
-
-# print(out_full[0].sort_values(by = "date").head())
-
-# edi_df = out_edi[0]
-# edi_dict = out_edi[1]
-
-
-
 ## to import tags version ##
 
 tag_df = init_df(tags_filename, "tags")
+edi_df = init_df(elist_filename, "editorial")
+full_df = init_df(full_filename, "full")
 
 ###########
 
@@ -65,20 +54,7 @@ tag_df = init_df(tags_filename, "tags")
 
 # print(out_full["text"][0][0])  
 # print("#####") 
-# print(out_full["text"][0][2])   
-# print("#####") 
-# print(out_full["text"][0][3])   
-# print("#####") 
-# print(out_full["text"][0][4])   
-# print("#####") 
-# print(out_full["text"][0][5])   
-# print("#####") 
-# print(out_full["text"][0][6])   
 
-# print(len(full))
-# for line in out_full["bio"]:
-#     print("#######")
-#     print(line)
 ###########
 
 ## for calling and testing number of posts over time graphs

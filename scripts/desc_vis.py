@@ -38,7 +38,7 @@ def prep_per(df, group_by = "avg_month", color = "blue", test = False):
         plt.pyplot.show()
     return(df)
 
-def dual_per(df, split, group_by, test = False):
+def dual_per(df, split, test = False): # group_by, 
     if split == "column2":
         vals = df.column2.unique()
     colors = ["red", "blue"]
@@ -48,7 +48,7 @@ def dual_per(df, split, group_by, test = False):
             w_df = df[df.column2 == vals[i]]
         # w_df = prep_per(w_df, group_by, test, colors[i])
         
-        print([w_df.head(), vals[i]])
+        # print([w_df.head(), vals[i]])
         w_dfs.append([w_df, vals[i]])
     
     return(w_dfs)
