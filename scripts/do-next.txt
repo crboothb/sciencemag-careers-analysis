@@ -2,10 +2,14 @@ Do next:
 
 function for making aggregate graphs
 
-assemble dictionary showing incidence for different tags
+make n_posts_author more accurate by separating by author, then counting up posts by that author, then re-merging
 
-Fuzzy string matching for merging tags with editorials by headline
-* https://stackoverflow.com/questions/13636848/is-it-possible-to-do-fuzzy-match-merge-with-python-pandas
-* https://www.geeksforgeeks.org/fuzzywuzzy-python-library/
-* https://www.datacamp.com/community/tutorials/fuzzy-string-python
+
+DONE assemble dictionary showing incidence for different tags
+
+
+# Fuzzy string matching for merging tags with editorials by headline
+# * https://stackoverflow.com/questions/13636848/is-it-possible-to-do-fuzzy-match-merge-with-python-pandas
+# * https://www.geeksforgeeks.org/fuzzywuzzy-python-library/
+# * https://www.datacamp.com/community/tutorials/fuzzy-string-python
 

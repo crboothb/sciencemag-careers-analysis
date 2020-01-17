@@ -10,23 +10,34 @@ tags_filename = "../data/by_article_110219.jl"
 full_filename = "../data/by_article_fulltext_112919-2.jl"
 test_full_filename = "../data/full_text.jl"
 
-def init_df(filename, focus, test = False):
-    raw = imp.import_jl(filename)
-    out = imp.process(raw, focus = focus, out_form = "df")
+# def init_df(filename, focus, test = False):
+#     raw = imp.import_jl(filename)
+#     out = imp.process(raw, focus = focus, out_form = "df")
 
-    df = out
-    df = imp.seq_dates(df, focus)
-    if focus != "editorial":
-        df = imp.id_columns(df)
-    if test == True:
-        print(df.head())
-    return(df)
+#     df = out
+#     df = imp.seq_dates(df, focus)
+#     if focus != "editorial":
+#         df = imp.id_columns(df)
+#     if test == True:
+#         print(df.head())
+#     return(df)
 
-## to import tags version ##
+## to import ##
 
-tag_df = init_df(tags_filename, "tags")
-edi_df = init_df(elist_filename, "editorial")
-full_df = init_df(full_filename, "full")
+# tag_df = imp.init_df(tags_filename, "tags")
+# edi_df = imp.init_df(elist_filename, "editorial")
+full_df = imp.init_df(full_filename, "full")
+
+###########
+
+## to mess around with tag incidence functions
+
+tags_dict_id = tgs.tag_incidence(full_df, lifespan = True, id_col_tag = True, binary = True, dict_return=True)
+year_inc = tgs.inc_per_year(tags_dict_id)
+
+print(tags_dict_id["oncology"])
+print(year_inc.tail(20))
+
 
 ###########
 
@@ -61,17 +72,17 @@ full_df = init_df(full_filename, "full")
 
 # per_month_df = vis.prep_per(tag_df, group_by = "year", test = True)
 
-column = vis.dual_per(tag_df, split = "column2", group_by = "avg_month", test = True)
+# column = vis.dual_per(tag_df, split = "column2", group_by = "avg_month", test = True)
 
-column1 = column[0][0]
-column2 = column[1][0]
+# column1 = column[0][0]
+# column2 = column[1][0]
 
-column_df0 = vis.prep_per(column1, group_by = "year", color = "red", test = False)
-column_df1 = vis.prep_per(column2, group_by = "year", color = "blue", test = False)
+# column_df0 = vis.prep_per(column1, group_by = "year", color = "red", test = False)
+# column_df1 = vis.prep_per(column2, group_by = "year", color = "blue", test = False)
 
-sns.lineplot(x = "year", y = "n", color = "red", data = column_df0) 
-sns.lineplot(x = "year", y = "n", color = "blue", data = column_df1) 
-plt.pyplot.show()
+# sns.lineplot(x = "year", y = "n", color = "red", data = column_df0) 
+# sns.lineplot(x = "year", y = "n", color = "blue", data = column_df1) 
+# plt.pyplot.show()
 
 
 ###########

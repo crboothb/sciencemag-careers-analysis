@@ -191,6 +191,18 @@ def process(list, focus, out_form):
 # Right now, this function returns a sequence from the actual start of the publications to the most recent publications
 # I would want later versions of this to be more flexible--maybe allowing the start and end times to be set in the function?
 
+def init_df(filename, focus, test = False):
+    raw = import_jl(filename)
+    out = process(raw, focus = focus, out_form = "df")
+
+    df = out
+    df = seq_dates(df, focus)
+    if focus != "editorial":
+        df = id_columns(df)
+    if test == True:
+        print(df.head())
+    return(df)
+
 def cumulative():
     months_r = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     months_l = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]

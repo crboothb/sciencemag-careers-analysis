@@ -1,5 +1,10 @@
 # temporary testing files
-#test.py
+test.py
+word2vec.model
+do-next.txt
 
 # folders
 testfiles/
+lit/
+scripts/ipynb_checkpoints
+scripts/_pycache_
