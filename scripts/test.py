@@ -32,11 +32,11 @@ full_df = imp.init_df(full_filename, "full")
 
 ## to mess around with tag incidence functions
 
-tags_dict_id = tgs.tag_incidence(full_df, lifespan = True, id_col_tag = True, binary = True, dict_return=True)
-year_inc = tgs.inc_per_year(tags_dict_id)
+# tags_dict_id = tgs.tag_incidence(full_df, lifespan = True, id_col_tag = True, binary = True, dict_return=True)
+# year_inc = tgs.inc_per_year(tags_dict_id)
 
-print(tags_dict_id["oncology"])
-print(year_inc.tail(20))
+# print(tags_dict_id["oncology"])
+# print(year_inc.tail(20))
 
 
 ###########
