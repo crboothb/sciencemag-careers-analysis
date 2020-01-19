@@ -99,6 +99,7 @@ def tag_incidence(df, lifespan = True, id_col_tag = False, quantile = .8, binary
 ##  Possible strategies
 # max(prop of author) - (number of authors/incidence) = diff
 # ----> if diff is higher, it's more likely to be a column tag for a
+# if columns=True, returns only the tags that WERE for columns
 
 def id_column_tags(i_dict, quantile = .8, binary = True):
     col_tag = {}
@@ -140,7 +141,10 @@ def id_column_tags(i_dict, quantile = .8, binary = True):
 
     return(out_col_tag)
 
-def inc_per_year(i_dict):
+# for converting the dictionary produced by tags_dict_id([etc]..., dict_return=True) into the dataframe with the incidence of each tags by year
+# when columns="yes", it only returns tags that are not columns. When , columns="all", returns all tags. when columns="yes", returns only columns
+
+def inc_per_year(i_dict, columns="no"):
     # tags incidence dataframe
     tag_inc_df = {"year":[],"tag":[],"incidence":[]}
     tag_inc_counting = {}
@@ -149,7 +153,7 @@ def inc_per_year(i_dict):
     # count incidences of each tag per year
     for key in [key for key in i_dict.keys()]:
         # print(key)
-        if i_dict[key]["overall"]["col_tag"] == "no": # filter out tags that are probs identifying columns
+        if i_dict[key]["overall"]["col_tag"] == columns: # filter out tags that are probs identifying columns
             if key in tag_inc_counting.keys():
                 for post in i_dict[key]["overall"]["span"]:
                     w_year = imp.cumul_to(post[1], "m")

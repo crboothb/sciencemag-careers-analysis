@@ -3,7 +3,7 @@ Do next:
 function for making aggregate graphs
 
 make n_posts_author more accurate by separating by author, then counting up posts by that author, then re-merging
-
+classifier
 
 DONE assemble dictionary showing incidence for different tags
 
