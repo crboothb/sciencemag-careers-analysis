@@ -1,10 +1,12 @@
 # temporary testing files
 test.py
 word2vec.model
-do-next.txt
+scripts/do-next.txt
+.vscode
+scripts/ipynb_checkpoints
+scripts/_pycache_
+scripts/__pycache__/tags_work.cpython-37.pyc
 
 # folders
 testfiles/
 lit/
-scripts/ipynb_checkpoints
-scripts/_pycache_
