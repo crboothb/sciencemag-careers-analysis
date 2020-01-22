@@ -7,7 +7,7 @@ import numpy as np
 import import_func as imp
 
 
-# first, need to tidy data by putting all the tags into their own rows,
+# first, separate tags tidies the data by putting all the tags into their own rows,
 # keeping the article data affiliated with each tag
 # function takes dataframe
 # the dataframe must contain a column titled "tags" with its values as a series of lists of tags
@@ -28,10 +28,12 @@ def seperate_tags(df):
 
     return(tags_seperate)
 
-# first this function requires the separate_tags dataframe--it will call it if necessary
+# first tag_incidence requires the usual dataframe after imp.init_df processing
+# it will call the separate_tags function on its own
 # takes dataframe, takes lifespan as arguments
 # if lifespan = True 
-# returns a dictionary
+# if dict_return = True, it returns a dictionary.
+# Otherwise, it returns a dataframe by default
 
 # structure of inc_dict
 # {tag: 
@@ -43,7 +45,8 @@ def seperate_tags(df):
 #     {"author1": int, "author2": int, ... }
 # }
 
-def tag_incidence(df, lifespan = True, id_col_tag = False, quantile = .8, binary = True):
+def tag_incidence(df, lifespan = True, id_col_tag = False, quantile = .8, binary = True, dict_return=False):
+    df = seperate_tags(df)
 
     i_dict = {}
 
@@ -72,16 +75,31 @@ def tag_incidence(df, lifespan = True, id_col_tag = False, quantile = .8, binary
         test = id_column_tags(i_dict, quantile = quantile, binary = binary)
         for key in [key for key in test.keys()]:
             i_dict[key]["overall"]["col_tag"] = test[key]
-        return(i_dict)
+        if dict_return == True:
+            return(i_dict)
 
     else:
-        return(i_dict)
+        if dict_return == True:
+            return(i_dict)
+
+    # convert dictionary to dataframe
+    if dict_return == False:
+        col_tag_todf = {}
+
+        for i in df.index.values:
+            w_tag = df.loc[i, "tag"]
+            col_tag_todf[w_tag] = i_dict[w_tag]["overall"]["col_tag"]
+
+        df["col_tag"] = df["tag"].map(col_tag_todf) 
+        return(df)
+
 
 # 
 
 ##  Possible strategies
 # max(prop of author) - (number of authors/incidence) = diff
 # ----> if diff is higher, it's more likely to be a column tag for a
+# if columns=True, returns only the tags that WERE for columns
 
 def id_column_tags(i_dict, quantile = .8, binary = True):
     col_tag = {}
@@ -123,5 +141,47 @@ def id_column_tags(i_dict, quantile = .8, binary = True):
 
     return(out_col_tag)
 
+# for converting the dictionary produced by tags_dict_id([etc]..., dict_return=True) into the dataframe with the incidence of each tags by year
+# when columns="yes", it only returns tags that are not columns. When , columns="all", returns all tags. when columns="yes", returns only columns
 
+def inc_per_year(i_dict, columns="no"):
+    # tags incidence dataframe
+    tag_inc_df = {"year":[],"tag":[],"incidence":[]}
+    tag_inc_counting = {}
+    # tag_inc_counting = {tag: {year:int, year: int, year: int}}
 
+    # count incidences of each tag per year
+    for key in [key for key in i_dict.keys()]:
+        # print(key)
+        if i_dict[key]["overall"]["col_tag"] == columns: # filter out tags that are probs identifying columns
+            if key in tag_inc_counting.keys():
+                for post in i_dict[key]["overall"]["span"]:
+                    w_year = imp.cumul_to(post[1], "m")
+                    print(w_year)
+                    if w_year in tag_inc_counting[key].keys():
+                        print("add2")
+                        tag_inc_counting[key][w_year] += 1
+                    else:
+                        tag_inc_counting[key][w_year] = 1
+                        print(tag_inc_counting[key])
+            else:
+                tag_inc_counting[key] = {}
+                for post in i_dict[key]["overall"]["span"]:
+                    w_year = imp.cumul_to(post[1], "m")
+                    #print(w_year)
+                    if w_year in tag_inc_counting[key].keys():
+                        #print("add1")
+                        tag_inc_counting[key][w_year] += 1
+                    else:
+                        tag_inc_counting[key][w_year] = 1
+                        #print(tag_inc_counting[key])
+
+    # convert counting dictionary to dictionary that can be made into a df
+    for key in tag_inc_counting.keys():
+        for year in tag_inc_counting[key].keys():
+            tag_inc_df["year"].append(year)
+            tag_inc_df["tag"].append(key)
+            tag_inc_df["incidence"].append(tag_inc_counting[key][year])
+
+    tag_inc_df = pd.DataFrame(tag_inc_df)
+    return(tag_inc_df)

@@ -1,5 +1,19 @@
-# temporary testing files
-#test.py
+# files
+test.py
+word2vec.model
+scripts/do-next.txt
+.vscode
+scripts/ipynb_checkpoints
+scripts/_pycache_
+scripts/__pycache__/tags_work.cpython-37.pyc
+scripts/__pycache__/import_func.cpython-37.pyc
+.RHistory
+.RData
+.DS_Store
 
 # folders
 testfiles/
+lit/
+
+# file extensions
+*.pyc

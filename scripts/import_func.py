@@ -23,6 +23,7 @@ def import_jl(filename):
 # takes list of lines in original file as list argument
 # takes "editorial", "tags", or "full" as focus argument to indicate whether it's the editorial or tags
 # I think this one handles the dates and the items in the dates column are datetime objects
+# out_form="dict" or "df"
 
 def process(list, focus, out_form):
     
@@ -190,6 +191,18 @@ def process(list, focus, out_form):
 # Why am I doing this? I'm trying to calculate the months from the date_seq 
 # Right now, this function returns a sequence from the actual start of the publications to the most recent publications
 # I would want later versions of this to be more flexible--maybe allowing the start and end times to be set in the function?
+
+def init_df(filename, focus, test = False, out_form="df"):
+    raw = import_jl(filename)
+    out = process(raw, focus = focus, out_form = out_form)
+
+    df = out
+    df = seq_dates(df, focus)
+    if focus != "editorial":
+        df = id_columns(df)
+    if test == True:
+        print(df.head())
+    return(df)
 
 def cumulative():
     months_r = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
