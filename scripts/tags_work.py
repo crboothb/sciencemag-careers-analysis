@@ -136,6 +136,8 @@ def id_column_tags(i_dict, quantile = .8, binary = True):
         for key in col_tag.keys():
             if col_tag[key][2] > q:
                 out_col_tag[key] = "yes"
+            elif key == "column":
+                out_col_tag[key] = "yes"
             else:
                 out_col_tag[key] = "no"
 
