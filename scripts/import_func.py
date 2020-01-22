@@ -91,7 +91,7 @@ def process(list, focus, out_form):
             tags = line["tags"]
             unique_tags = []
             for tag in tags:
-                #tag.replace("read more ","")
+                tag = tag.replace("read more ","").replace("how-tos","how-to")
                 if tag not in unique_tags:
                     unique_tags.append(tag)
             tags = unique_tags
