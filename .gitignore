@@ -49,6 +49,7 @@ supp.pdf
 *.tsv
 *.txt
 *.json
+*.jl
 
 # Office files
 *.docx
