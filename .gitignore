@@ -21,6 +21,8 @@ Latest-News-Classifier/
 # file extensions
 *.pyc
 *.pickle
+*.png
+*.jpeg
 
 # html files
 *.html
