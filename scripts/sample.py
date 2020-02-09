@@ -47,4 +47,18 @@ print("data loaded")
 
 
 sample200 = random.sample(list(full_dict.index.values), 200)
-sample200_chunks = []
+
+# This function creates chunks and returns them
+def chunkify(lst,n):
+    return([ lst[i::n] for i in [j for j in range(n)] ])
+ 
+sample200_chunks = chunkify(sample200, 10)
+
+for chunk in sample200_chunks:
+    print(chunk)
+
+with open('pickles/sample200.pickle', 'wb') as output:
+    pickle.dump(sample200, output)
+
+with open('pickles/sample200_chunks.pickle', 'wb') as output:
+    pickle.dump(sample200_chunks, output)
