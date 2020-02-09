@@ -10,7 +10,7 @@ import import_func as imp
 import tags_work as tgs
 import desc_vis as vis
 
-session = 1
+session = 2
 full_filename = "../data/by_article_fulltext_112919-2.jl"
 
 # get full text dataset as a df
