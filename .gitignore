@@ -21,6 +21,7 @@ lit/
 #data/
 Latest-News-Classifier/
 writing/
+figs/
 
 # file extensions
 *.pyc
