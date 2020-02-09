@@ -78,13 +78,16 @@ def process(list, focus, out_form):
         if focus == "tags":
             tags_dict = {"headline":[],"tags":[],"authors":[],"date":[],"time":[] }
         else:
-            tags_dict = {"headline":[],"tags":[],"authors":[],"date":[],"time":[], "text": [], "bio":[] }
-
+            tags_dict = {"id":[],"headline":[],"tags":[],"authors":[],"date":[],"time":[], "text": [], "bio":[] }
+        
+        id_count = 0
         for line in list:
         # if "null" in line:
         #     line = line.replace("null", "\'null\'")
         #     line = ast.literal_eval(line)
 
+            tags_dict["id"].append(id_count)
+            id_count +=1
             head = line["headline"].replace("\n","").replace("\"","")
             tags_dict["headline"].append(head)
 

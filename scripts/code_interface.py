@@ -4,6 +4,7 @@ import pickle
 import pandas as pd
 import re
 import string
+import random
 
 import import_func as imp
 import tags_work as tgs
@@ -16,11 +17,46 @@ full_filename = "../data/by_article_fulltext_112919-2.jl"
 # full_df = imp.init_df(full_filename, "full")
 
 # get full dataset as a dict
-full_dict = imp.init_df(full_filename, "full", "dict")
+# full_dict = imp.init_df(full_filename, "full", "dict") # Apparently this still returns a pandas dataframe... Awkward
+full_dict = imp.init_df(full_filename, "full", "df") # This variable is still saved as full_dict so that I don't have to change the rest of the variables
+# print(full_dict.keys())
+# print(full_df.head())
+
+# print(full_dict.head())
+
+# for key in full_dict.keys():
+#     print(len(full_dict[key]))
+
+def drop_short(df):
+    to_drop = []
+    for i in df.index.values:
+        # print(i)
+        text = df.loc[i, "text"]
+        if len(text.split(" ")) < 200:
+            # print(i)
+            to_drop.append(i)
+
+    # print(to_drop)
+    # df = df.drop(to_drop)
+    return(df.drop(to_drop))
+
+full_dict = drop_short(full_dict)
+
+# print("###########################")
+# for key in full_dict.keys():
+#     print(len(full_dict[key]))
+
 print("data loaded")
+
+# print(type(full_dict.index.values))
+sample200 = random.sample(list(full_dict.index.values), 200)
+sample200_chunks = []
+
 
 sample50 = [3188, 1591, 2152, 4044, 2789, 5685, 5191, 2360, 518, 189, 5509, 3033, 499, 2024, 3563, 4216, 1422, 3904, 3256, 420, 4940, 3397, 6087, 4548, 227, 4817, 1351, 765, 4161, 5139, 4899, 5243, 1334, 4234, 2629, 815, 5516, 2170, 1765, 3183, 5143, 3225, 1759, 5209, 5249, 4487, 3447, 4963, 2656, 825]
 sample_t = [2,4,300,8]
+
+
 
 # functions
 def no_punctuation(text, quotes=False):
@@ -32,7 +68,7 @@ def no_punctuation(text, quotes=False):
     return(text)
 
 test = no_punctuation(full_dict["text"][5])
-print(test)
+
 
 def replace_quotes(text, flag="false", error="false", right="false"):
     text = text.replace("\“","\"")
@@ -73,7 +109,7 @@ counts4df = {"id":[],"first":[],"second":[],"wc":[],"first_f":[],"second_f":[], 
 
 count = 0
 
-for num in sample50:
+for num in sample200:
     count+=1
     text = full_dict["text"][num]
     wc = len(text.split(" "))
@@ -92,11 +128,11 @@ for num in sample50:
     counts4df["second_f"].append(count_pro(no_punctuation(text, quotes=True), "second")/wc)
     counts4df["input"].append(advance)
 
-hand_coded_df = pd.DataFrame(counts4df)
+hand_coded_df_20_1 = pd.DataFrame(counts4df)
 
-print(hand_coded_df)
+# print(hand_coded_df)
 
 with open('pickles/hand_coded.pickle', 'wb') as output:
-    pickle.dump(hand_coded_df, output)
+    pickle.dump(hand_coded_df_20_1, output)
 
 print("done")
