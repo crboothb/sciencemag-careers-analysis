@@ -201,6 +201,8 @@ def init_df(filename, focus, test = False, out_form="df"):
 
     df = out
     df = seq_dates(df, focus)
+    # remove any articles published after 2019
+    # df = df[df.year<2020]
     if focus != "editorial":
         df = id_columns(df)
     if test == True:
@@ -215,7 +217,7 @@ def cumulative():
     cumulative_days = [31, 61, 92]
     cumulative_months = [13]
 
-    for year in range(1997,2021):
+    for year in range(1997,2025):
         cumulative_months.append(cumulative_months[-1] + 12)
         if year%4 == 0:
             months = months_l
