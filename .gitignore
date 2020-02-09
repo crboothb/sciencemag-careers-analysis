@@ -14,7 +14,7 @@ __pycache__
 
 # folders
 testfiles/
-lit/
+lit/    
 #data/
 Latest-News-Classifier/
 
