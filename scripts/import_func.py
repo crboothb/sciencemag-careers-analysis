@@ -78,13 +78,16 @@ def process(list, focus, out_form):
         if focus == "tags":
             tags_dict = {"headline":[],"tags":[],"authors":[],"date":[],"time":[] }
         else:
-            tags_dict = {"headline":[],"tags":[],"authors":[],"date":[],"time":[], "text": [], "bio":[] }
-
+            tags_dict = {"id":[],"headline":[],"tags":[],"authors":[],"date":[],"time":[], "text": [], "bio":[] }
+        
+        id_count = 0
         for line in list:
         # if "null" in line:
         #     line = line.replace("null", "\'null\'")
         #     line = ast.literal_eval(line)
 
+            tags_dict["id"].append(id_count)
+            id_count +=1
             head = line["headline"].replace("\n","").replace("\"","")
             tags_dict["headline"].append(head)
 
@@ -198,6 +201,8 @@ def init_df(filename, focus, test = False, out_form="df"):
 
     df = out
     df = seq_dates(df, focus)
+    # remove any articles published after 2019
+    # df = df[df.year<2020]
     if focus != "editorial":
         df = id_columns(df)
     if test == True:
@@ -212,7 +217,7 @@ def cumulative():
     cumulative_days = [31, 61, 92]
     cumulative_months = [13]
 
-    for year in range(1997,2021):
+    for year in range(1997,2025):
         cumulative_months.append(cumulative_months[-1] + 12)
         if year%4 == 0:
             months = months_l

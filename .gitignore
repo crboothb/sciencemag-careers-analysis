@@ -4,9 +4,14 @@ word2vec.model
 scripts/do-next.txt
 .vscode
 scripts/ipynb_checkpoints
-scripts/__pycache__
+scripts/__pycache__/
 scripts/__pycache__/tags_work.cpython-37.pyc
 scripts/__pycache__/import_func.cpython-37.pyc
+scripts\__pycache__\
+scripts\__pycache__\tags_work.cpython-37.pyc
+scripts\__pycache__\import_func.cpython-37.pyc
+test1/spiders/__pycache__/editorial2_scrape.cpython-37.pyc
+test1/spiders\__pycache__\editorial2_scrape.cpython-37.pyc
 .RHistory
 .RData
 .DS_Store
@@ -14,13 +19,17 @@ __pycache__
 
 # folders
 testfiles/
-lit/
+lit/    
 #data/
 Latest-News-Classifier/
+writing/
+figs/
 
 # file extensions
 *.pyc
 *.pickle
+*.png
+*.jpeg
 
 # html files
 *.html

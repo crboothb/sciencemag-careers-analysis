@@ -5,8 +5,8 @@ class QuotesSpider(scrapy.Spider):
     name = "science_article"
 
     def start_requests(self):
-        urls_list = []
-        for i in range(254): #254
+        urls_list = ["https://www.sciencemag.org/careers/articles"]
+        for i in range(255): #254
             urls_list.append("https://www.sciencemag.org/careers/articles?page="+str(i))
         #urls = ["https://www.sciencemag.org/careers/articles?page=10", "https://www.sciencemag.org/careers/articles?page=11", "https://www.sciencemag.org/careers/articles?page=12", "https://www.sciencemag.org/careers/articles?page=13"]
         for url in urls_list:
