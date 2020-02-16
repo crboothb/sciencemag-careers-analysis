@@ -18,8 +18,12 @@ indexNames = coded_df[ coded_df["input"] == "-" ].index
 coded_df.drop(indexNames , inplace=True)
 coded_df["input"] = coded_df["input"].astype(int)
 
+with open('pickles/hand_coded_ALL.pickle', 'wb') as output:
+    pickle.dump(coded_df, output)
 
-print(coded_df.dtypes)
+print("done")
+
+# print(coded_df.dtypes)
 # print(len(coded_df))
 
 # print(coded_df)
