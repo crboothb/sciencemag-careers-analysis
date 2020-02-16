@@ -1,5 +1,6 @@
 # particular project-specific files
 test.py
+test1/spiders/__init__.py
 word2vec.model
 scripts/do-next.txt
 .vscode
