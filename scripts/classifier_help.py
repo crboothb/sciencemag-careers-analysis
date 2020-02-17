@@ -42,7 +42,7 @@ def count_pro(clean_text, person):
 def pronouns(f_df, sample="none"):
     first_pronouns = [" i "," im ", " ive ", " id "," my ", " me ", " myself "]
     second_pronouns = [" you "," youre ", " youve "," youd "," your ", " yourself "]
-    third_pronouns = []
+    # third_pronouns = []
 
     if sample == "none":
         sample = [i for i in range(len(f_df))]
