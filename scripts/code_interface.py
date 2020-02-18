@@ -10,7 +10,7 @@ import import_func as imp
 import tags_work as tgs
 import desc_vis as vis
 
-session = 3
+session = 1
 full_filename = "../data/by_article_fulltext_020920.jl"
 
 # get full text dataset as a df
@@ -59,8 +59,8 @@ with open("pickles/sample200_chunks.pickle", 'rb') as data:
     sample200_chunks = pickle.load(data)
 
 
-sample50 = [3188, 1591, 2152, 4044, 2789, 5685, 5191, 2360, 518, 189, 5509, 3033, 499, 2024, 3563, 4216, 1422, 3904, 3256, 420, 4940, 3397, 6087, 4548, 227, 4817, 1351, 765, 4161, 5139, 4899, 5243, 1334, 4234, 2629, 815, 5516, 2170, 1765, 3183, 5143, 3225, 1759, 5209, 5249, 4487, 3447, 4963, 2656, 825]
-sample_t = [2,4,300,8]
+# sample50 = [3188, 1591, 2152, 4044, 2789, 5685, 5191, 2360, 518, 189, 5509, 3033, 499, 2024, 3563, 4216, 1422, 3904, 3256, 420, 4940, 3397, 6087, 4548, 227, 4817, 1351, 765, 4161, 5139, 4899, 5243, 1334, 4234, 2629, 815, 5516, 2170, 1765, 3183, 5143, 3225, 1759, 5209, 5249, 4487, 3447, 4963, 2656, 825]
+# sample_t = [2,4,300,8]
 
 
 
@@ -111,34 +111,38 @@ def count_pro(clean_text, person):
     return(count)
 
 
-counts4df = {"id":[],"first":[],"second":[],"wc":[],"first_f":[],"second_f":[], "input":[]}
+counts4df = {"id":[],"headline":[],"first":[],"second":[], "input":[]}
 
 count = 0
 
 for num in sample200_chunks[session-1]:
-    count+=1
     text = full_dict["text"][num]
     wc = len(text.split(" "))
     # print(num)
     # print(count_pro(text, "first")/wc)
     # print(count_pro(text, "second")/wc)
     print("\n\n"+str(count))
+    # print(num)
+    # print(full_dict["id"][num])
+    print(full_dict["headline"][num])
     print(text)
     advance = input("any key")
     counts4df["id"].append(num)
     # counts4df["year"].append(f_df["year"][samp])
     counts4df["first"].append(count_pro(no_punctuation(text, quotes=True), "first"))
     counts4df["second"].append(count_pro(no_punctuation(text, quotes=True), "second"))
-    counts4df["wc"].append(wc)
-    counts4df["first_f"].append(count_pro(no_punctuation(text, quotes=True), "first")/wc)
-    counts4df["second_f"].append(count_pro(no_punctuation(text, quotes=True), "second")/wc)
+    counts4df["headline"].append(full_dict["headline"][num])
+    # counts4df["wc"].append(wc)
+    # counts4df["first_f"].append(count_pro(no_punctuation(text, quotes=True), "first")/wc)
+    # counts4df["second_f"].append(count_pro(no_punctuation(text, quotes=True), "second")/wc)
     counts4df["input"].append(advance)
+    count+=1
 
 hand_coded_df_20_1 = pd.DataFrame(counts4df)
 
 # print(hand_coded_df)
 
-with open('pickles/hand_coded'+str(session)+'.pickle', 'wb') as output:
+with open('pickles/hand_coded'+str(session)+'_2.pickle', 'wb') as output:
     pickle.dump(hand_coded_df_20_1, output)
 
 print("done")

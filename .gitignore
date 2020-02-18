@@ -1,5 +1,6 @@
 # particular project-specific files
 test.py
+test1/spiders/__init__.py
 word2vec.model
 scripts/do-next.txt
 .vscode
@@ -11,6 +12,7 @@ scripts\__pycache__\
 scripts\__pycache__\tags_work.cpython-37.pyc
 scripts\__pycache__\import_func.cpython-37.pyc
 test1/spiders/__pycache__/editorial2_scrape.cpython-37.pyc
+test1/spiders/__pycache__/
 test1/spiders\__pycache__\editorial2_scrape.cpython-37.pyc
 .RHistory
 .RData
