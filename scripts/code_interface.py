@@ -1,14 +1,15 @@
 # too annoying in jupyter notebooks
 
 import pickle
-import pandas as pd
+import random
 import re
 import string
-import random
 
+import pandas as pd
+
+import desc_vis as vis
 import import_func as imp
 import tags_work as tgs
-import desc_vis as vis
 
 session = 1
 full_filename = "../data/by_article_fulltext_020920.jl"
@@ -18,7 +19,9 @@ full_filename = "../data/by_article_fulltext_020920.jl"
 
 # get full dataset as a dict
 # full_dict = imp.init_df(full_filename, "full", "dict") # Apparently this still returns a pandas dataframe... Awkward
-full_dict = imp.init_df(full_filename, "full", "df") # This variable is still saved as full_dict so that I don't have to change the rest of the variables
+full_dict = imp.init_df(
+    full_filename, "full", "df"
+)  # This variable is still saved as full_dict so that I don't have to change the rest of the variables
 # print(full_dict.keys())
 # print(full_df.head())
 
@@ -26,6 +29,7 @@ full_dict = imp.init_df(full_filename, "full", "df") # This variable is still sa
 
 # for key in full_dict.keys():
 #     print(len(full_dict[key]))
+
 
 def drop_short(df):
     to_drop = []
@@ -38,7 +42,8 @@ def drop_short(df):
 
     # print(to_drop)
     # df = df.drop(to_drop)
-    return(df.drop(to_drop))
+    return df.drop(to_drop)
+
 
 full_dict = drop_short(full_dict)
 
@@ -52,10 +57,10 @@ print("data loaded")
 # sample200 = random.sample(list(full_dict.index.values), 200)
 # sample200_chunks = []
 
-with open("pickles/sample200.pickle", 'rb') as data:
+with open("pickles/sample200.pickle", "rb") as data:
     sample200 = pickle.load(data)
 
-with open("pickles/sample200_chunks.pickle", 'rb') as data:
+with open("pickles/sample200_chunks.pickle", "rb") as data:
     sample200_chunks = pickle.load(data)
 
 
@@ -63,65 +68,65 @@ with open("pickles/sample200_chunks.pickle", 'rb') as data:
 # sample_t = [2,4,300,8]
 
 
-
 # functions
 def no_punctuation(text, quotes=False):
     for mark in string.punctuation:
         if quotes == True:
-            if mark == "\"":
+            if mark == '"':
                 continue
-        text = text.replace(mark,"")
-    return(text)
+        text = text.replace(mark, "")
+    return text
+
 
 test = no_punctuation(full_dict["text"][5])
 
 
 def replace_quotes(text, flag="false", error="false", right="false"):
-    text = text.replace("\“","\"")
+    text = text.replace("\“", '"')
     count = error
 
-    quotes = re.findall(r'\"(.+?)\"', text)
+    quotes = re.findall(r"\"(.+?)\"", text)
 
     to_replace = quotes
 
-
     for quote in to_replace:
-        text = text.replace(quote," QUOTATION_REPLACEMENT ")
+        text = text.replace(quote, " QUOTATION_REPLACEMENT ")
         # print(quote+"\n")
     if type(error) == int:
         right += len(quotes)
-        return(text, count, right)
+        return (text, count, right)
     else:
-        return(text)
+        return text
+
 
 def count_pro(clean_text, person):
     if person == "first":
-        pronouns = [" i "," im ", " ive ", " id "," my ", " me ", " myself "]
+        pronouns = [" i ", " im ", " ive ", " id ", " my ", " me ", " myself "]
     elif person == "second":
-        pronouns = [" you "," youre ", " youve "," youd "," your ", " yourself "]
+        pronouns = [" you ", " youre ", " youve ", " youd ", " your ", " yourself "]
     else:
         pronouns = []
-    
+
     count = 0
 
     clean_text = replace_quotes(clean_text)
 
     for pro in pronouns:
         count += clean_text.count(pro)
-    return(count)
+    return count
 
 
-counts4df = {"id":[],"headline":[],"first":[],"second":[], "input":[]}
+counts4df = {"id": [], "headline": [], "first": [], "second": [], "input": []}
 
 count = 0
 
-for num in sample200_chunks[session-1]:
+for num in sample200_chunks[session - 1]:
     text = full_dict["text"][num]
     wc = len(text.split(" "))
     # print(num)
     # print(count_pro(text, "first")/wc)
     # print(count_pro(text, "second")/wc)
-    print("\n\n"+str(count))
+    print("\n\n" + str(count))
     # print(num)
     # print(full_dict["id"][num])
     print(full_dict["headline"][num])
@@ -136,13 +141,13 @@ for num in sample200_chunks[session-1]:
     # counts4df["first_f"].append(count_pro(no_punctuation(text, quotes=True), "first")/wc)
     # counts4df["second_f"].append(count_pro(no_punctuation(text, quotes=True), "second")/wc)
     counts4df["input"].append(advance)
-    count+=1
+    count += 1
 
 hand_coded_df_20_1 = pd.DataFrame(counts4df)
 
 # print(hand_coded_df)
 
-with open('pickles/hand_coded'+str(session)+'_2.pickle', 'wb') as output:
+with open("pickles/hand_coded" + str(session) + "_2.pickle", "wb") as output:
     pickle.dump(hand_coded_df_20_1, output)
 
 print("done")
