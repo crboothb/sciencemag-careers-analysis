@@ -1,54 +1,58 @@
-import string
 import re
+import string
+
 import pandas as pd
+
 
 def no_punctuation(text, quotes=False):
     for mark in string.punctuation:
-        if quotes == True:
-            if mark == "\"":
+        if quotes is True:
+            if mark == '"':
                 continue
-        text = text.replace(mark,"")
-    return(text)
+        text = text.replace(mark, "")
+    return text
+
 
 def replace_quotes(text):
     # text = text.replace("\“","\"")
 
-    quotes = re.findall(r'\"(.+?)\"', text)
+    quotes = re.findall(r"\"(.+?)\"", text)
 
     to_replace = quotes
-    
+
     for quote in to_replace:
-        text = text.replace(quote," QUOTATION_REPLACEMENT ")
+        text = text.replace(quote, " QUOTATION_REPLACEMENT ")
         # print(quote+"\n")
-    return(text)
+    return text
+
 
 def count_pro(clean_text, person):
     if person == "first":
-        pronouns = [" i "," im ", " ive ", " id "," my ", " me ", " myself "]
+        pronouns = [" i ", " im ", " ive ", " id ", " my ", " me ", " myself "]
     elif person == "second":
-        pronouns = [" you "," youre ", " youve "," youd "," your ", " yourself "]
+        pronouns = [" you ", " youre ", " youve ", " youd ", " your ", " yourself "]
     else:
         pronouns = []
-    
+
     count = 0
 
     clean_text = replace_quotes(clean_text)
 
     for pro in pronouns:
         count += clean_text.count(pro)
-    return(count)
+    return count
 
 
 def pronouns(f_df, sample="none"):
-    first_pronouns = [" i "," im ", " ive ", " id "," my ", " me ", " myself "]
-    second_pronouns = [" you "," youre ", " youve "," youd "," your ", " yourself "]
+    first_pronouns = [" i ", " im ", " ive ", " id ", " my ", " me ", " myself "]
+    second_pronouns = [" you ", " youre ", " youve ", " youd ", " your ", " yourself "]
     third_pronouns = []
 
     if sample == "none":
         sample = [i for i in range(len(f_df))]
 
     counts = {}
-    counts4df = {"id":[],"year":[],"first":[],"second":[],"wc":[]}
+    counts4df = {"id": [], "year": [], "first": [], "second": [], "wc": []}
 
     for samp in sample:
         count1 = 0
@@ -61,7 +65,7 @@ def pronouns(f_df, sample="none"):
         for pro in second_pronouns:
             count2 += w_text.count(pro)
         wc = len(w_text.split(" "))
-        counts[samp] = {"first":count1, "second":count2, "wc":wc}
+        counts[samp] = {"first": count1, "second": count2, "wc": wc}
         counts4df["id"].append(samp)
         counts4df["year"].append(f_df["year"][samp])
         counts4df["first"].append(count1)
@@ -69,4 +73,4 @@ def pronouns(f_df, sample="none"):
         counts4df["wc"].append(wc)
 
     c_df = pd.DataFrame(counts4df)
-    return(c_df)
+    return c_df
