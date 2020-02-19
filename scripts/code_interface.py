@@ -71,7 +71,7 @@ with open("pickles/sample200_chunks.pickle", "rb") as data:
 # functions
 def no_punctuation(text, quotes=False):
     for mark in string.punctuation:
-        if quotes == True:
+        if quotes is True:
             if mark == '"':
                 continue
         text = text.replace(mark, "")
