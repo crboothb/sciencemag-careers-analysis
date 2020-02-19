@@ -8,18 +8,11 @@ import pandas as pd
 ## and they assemble the working dataframes
 
 
-# import .jl files. Works fine for both ediorial and tags
-# takes path+filename as string as filename argument
-# returns contents as a list, with each line in file as a list item
-
-
-def import_jl(filename):
-    filename = filename
-    full = open(filename, "r")
-    list = []
-    for x in full:
-        list.append(x)
-    return list
+def import_jl(fname):
+    """Import .jl files. Works fine for both ediorial and tags takes 
+    path+filename as string as filename argument returns contents as a list, 
+    with each line in file as a list item"""
+    return open(fname, "r").readlines()
 
 
 # initially process content from imported jl files
