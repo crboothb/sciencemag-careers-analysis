@@ -1,9 +1,11 @@
+import random
+
+import matplotlib as plt
+import seaborn as sns
+
+import desc_vis as vis
 import import_func as imp
 import tags_work as tgs
-import desc_vis as vis
-import seaborn as sns
-import matplotlib as plt
-import random
 
 elist_filename = "../data/editorials-1.jl"
 tags_filename = "../data/by_article_110219.jl"
@@ -63,8 +65,8 @@ full_df = imp.init_df(full_filename, "full")
 #     print(out_full["date"][i])
 #     print(out_full["text"][i])
 
-# print(out_full["text"][0][0])  
-# print("#####") 
+# print(out_full["text"][0][0])
+# print("#####")
 
 ###########
 
@@ -80,8 +82,8 @@ full_df = imp.init_df(full_filename, "full")
 # column_df0 = vis.prep_per(column1, group_by = "year", color = "red", test = False)
 # column_df1 = vis.prep_per(column2, group_by = "year", color = "blue", test = False)
 
-# sns.lineplot(x = "year", y = "n", color = "red", data = column_df0) 
-# sns.lineplot(x = "year", y = "n", color = "blue", data = column_df1) 
+# sns.lineplot(x = "year", y = "n", color = "red", data = column_df0)
+# sns.lineplot(x = "year", y = "n", color = "blue", data = column_df1)
 # plt.pyplot.show()
 
 
