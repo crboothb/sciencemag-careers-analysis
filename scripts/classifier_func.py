@@ -1,8 +1,9 @@
 # Classifier functions
 
 import pickle
-import pandas as pd
+
 import nltk
+import pandas as pd
 from nltk.corpus import stopwords
 # from nltk.tokenize import punkt
 # from nltk.corpus.reader import wordnet
@@ -14,99 +15,138 @@ import classifier_help as clh
 path_models = "Models/"
 
 # KNN
-path_knn = path_models + 'best_knnc.pickle'
-with open(path_knn, 'rb') as data:
+path_knn = path_models + "best_knnc.pickle"
+with open(path_knn, "rb") as data:
     knn_model = pickle.load(data)
 
 path_tfidf = "pickles/tfidf.pickle"
-with open(path_tfidf, 'rb') as data:
+with open(path_tfidf, "rb") as data:
     tfidf = pickle.load(data)
 
 # Category mapping dictionary
-category_codes = {
-    'first': 1,
-    'second': 2,
-    'third': 3
-}
+category_codes = {"first": 1, "second": 2, "third": 3}
 
-category_names = {
-    1: 'first',
-    2: 'second',
-    3: 'third'
-}
+category_names = {1: "first", 2: "second", 3: "third"}
 
 # Needs to be altered to be consistent with the feature engineering that I developed earlier
 
-punctuation_signs = list("?:!.,;\"()")
-stop_words = list(stopwords.words('english'))
-pronouns = ["i","im", "ive", "id","my", "me", "myself","we","wed","weve","us","our", "ours","ourselves","you","youre", "youve","youd","your", "yourself", "yourselves","he","hes","hed","hell","him","his", "himself","she","shes","shell","shed","her","hers","herself","they","them","their","theirs","themself","themselves"]
+punctuation_signs = list('?:!.,;"()')
+stop_words = list(stopwords.words("english"))
+pronouns = [
+    "i",
+    "im",
+    "ive",
+    "id",
+    "my",
+    "me",
+    "myself",
+    "we",
+    "wed",
+    "weve",
+    "us",
+    "our",
+    "ours",
+    "ourselves",
+    "you",
+    "youre",
+    "youve",
+    "youd",
+    "your",
+    "yourself",
+    "yourselves",
+    "he",
+    "hes",
+    "hed",
+    "hell",
+    "him",
+    "his",
+    "himself",
+    "she",
+    "shes",
+    "shell",
+    "shed",
+    "her",
+    "hers",
+    "herself",
+    "they",
+    "them",
+    "their",
+    "theirs",
+    "themself",
+    "themselves",
+]
 stop_words_wo_pronouns = [word for word in stop_words if word not in pronouns]
 
+
 def create_features_from_text(text):
-    
+
     # Dataframe creation
     lemmatized_text_list = []
-    df = pd.DataFrame(columns=['Content'])
+    df = pd.DataFrame(columns=["Content"])
     df.loc[0] = text
-    df['Content_Parsed_1'] = df['Content'].str.replace("\r", " ")
-    df['Content_Parsed_1'] = df['Content_Parsed_1'].str.replace("\n", " ")
-    df['Content_Parsed_1'] = df['Content_Parsed_1'].str.replace("    ", " ")
-    df['Content_Parsed_1'] = df['Content_Parsed_1'].str.replace("\'s'", "")
-    df['Content_Parsed_1'] = df['Content_Parsed_1'].str.replace("\'", "")
+    df["Content_Parsed_1"] = df["Content"].str.replace("\r", " ")
+    df["Content_Parsed_1"] = df["Content_Parsed_1"].str.replace("\n", " ")
+    df["Content_Parsed_1"] = df["Content_Parsed_1"].str.replace("    ", " ")
+    df["Content_Parsed_1"] = df["Content_Parsed_1"].str.replace("'s'", "")
+    df["Content_Parsed_1"] = df["Content_Parsed_1"].str.replace("'", "")
     df["Content_Parsed_2"] = clh.no_punctuation(df["Content_Parsed_1"], quotes=True)
-    df["Content_Parsed_3"] = [clh.replace_quotes(text) for text in df["Content_Parsed_2"]]
+    df["Content_Parsed_3"] = [
+        clh.replace_quotes(text) for text in df["Content_Parsed_2"]
+    ]
     for punct_sign in punctuation_signs:
-        df['Content_Parsed_3'] = df['Content_Parsed_3'].str.replace(punct_sign, '')
+        df["Content_Parsed_3"] = df["Content_Parsed_3"].str.replace(punct_sign, "")
     for punct_sign_sp in list("-/"):
-        df['Content_Parsed_3'] = df['Content_Parsed_3'].replace(punct_sign_sp, ' ')
-    df['Content_Parsed_4'] = df['Content_Parsed_3'].str.replace("'s", "")
+        df["Content_Parsed_3"] = df["Content_Parsed_3"].replace(punct_sign_sp, " ")
+    df["Content_Parsed_4"] = df["Content_Parsed_3"].str.replace("'s", "")
     wordnet_lemmatizer = WordNetLemmatizer()
     lemmatized_list = []
-    text = df.loc[0]['Content_Parsed_4']
+    text = df.loc[0]["Content_Parsed_4"]
     text_words = text.split(" ")
     for word in text_words:
         lemmatized_list.append(wordnet_lemmatizer.lemmatize(word, pos="v"))
-    lemmatized_text = " ".join(lemmatized_list)    
+    lemmatized_text = " ".join(lemmatized_list)
     lemmatized_text_list.append(lemmatized_text)
-    df['Content_Parsed_5'] = lemmatized_text_list
-    df['Content_Parsed_6'] = df['Content_Parsed_5']
+    df["Content_Parsed_5"] = lemmatized_text_list
+    df["Content_Parsed_6"] = df["Content_Parsed_5"]
     for stop_word in stop_words_wo_pronouns:
         regex_stopword = r"\b" + stop_word + r"\b"
-        df['Content_Parsed_6'] = df['Content_Parsed_6'].str.replace(regex_stopword, '')
-    df = df['Content_Parsed_6']
-    df = df.rename(columns={'Content_Parsed_6': 'Content_Parsed'})
+        df["Content_Parsed_6"] = df["Content_Parsed_6"].str.replace(regex_stopword, "")
+    df = df["Content_Parsed_6"]
+    df = df.rename(columns={"Content_Parsed_6": "Content_Parsed"})
     # print(df.head())
-    
+
     # TF-IDF
     features = tfidf.transform(df).toarray()
-    
+
     return features
 
+
 def get_category_name(category_id):
-    for category, id_ in category_codes.items():    
+    for category, id_ in category_codes.items():
         if id_ == category_id:
             return category
 
+
 def predict_from_text(text):
-    
+
     # Predict using the input model
     prediction_knn = knn_model.predict(create_features_from_text(text))[0]
     # prediction_knn_proba = knn_model.predict_proba(create_features_from_text(text))[0]
-    
+
     # Return result
     category_knn = get_category_name(prediction_knn)
-    return(category_knn)
-    
+    return category_knn
+
     # print("The predicted category using the KNN model is %s." %(category_knn) )
     # print("The conditional probability is: %a" %(prediction_knn_proba.max()*100))
+
 
 def predict_from_text_list(in_list):
     pred_list = []
     for text in in_list:
         prediction = predict_from_text(text)
         pred_list.append(prediction)
-    return(pred_list)
-    
+    return pred_list
 
 
 # predict_from_text("I am a cat, I am I am I am.")
