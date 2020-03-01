@@ -6,10 +6,12 @@ import seaborn as sns
 import desc_vis as vis
 import import_func as imp
 import tags_work as tgs
+import classifier_func as cls
 
 elist_filename = "../data/editorials-1.jl"
 tags_filename = "../data/by_article_110219.jl"
-full_filename = "../data/by_article_fulltext_112919-2.jl"
+# full_filename = "../data/by_article_fulltext_112919-2.jl"
+full_filename = "../data/by_article_fulltext_020920.jl"
 test_full_filename = "../data/full_text.jl"
 
 # def init_df(filename, focus, test = False):
@@ -29,6 +31,15 @@ test_full_filename = "../data/full_text.jl"
 # tag_df = imp.init_df(tags_filename, "tags")
 # edi_df = imp.init_df(elist_filename, "editorial")
 full_df = imp.init_df(full_filename, "full")
+print("imported")
+
+# full_df = full_df[:20]
+
+full_df = cls.clean_text_df(full_df)
+person_automated = cls.designate_person_from_df(full_df)
+full_df["person_automated"] = person_automated
+
+print(full_df.head())
 
 ###########
 
