@@ -228,12 +228,12 @@ def process(list, focus, out_form):
 # I would want later versions of this to be more flexible--maybe allowing the start and end times to be set in the function?
 
 
-def init_df(filename, focus, test=False, out_form="df"):
+def init_df(filename, focus, test=False, out_form="df", advice=False):
     raw = import_jl(filename)
     out = process(raw, focus=focus, out_form=out_form)
 
     df = out
-    df = seq_dates(df, focus)
+    df = seq_dates(df, focus, advice=advice)
     # remove any articles published after 2019
     # df = df[df.year<2020]
     if focus != "editorial":
@@ -243,15 +243,21 @@ def init_df(filename, focus, test=False, out_form="df"):
     return df
 
 
-def cumulative():
+def cumulative(advice=False):
     months_r = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     months_l = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
     # I need a list of cumulative days at the end of each month going forward
-    cumulative_days = [31, 61, 92]
-    cumulative_months = [13]
+    if advice==False:
+        cumulative_days = [31, 61, 92]
+        cumulative_months = [13]
+        start = 1997
+    else:
+        cumulative_days = [30]
+        cumulative_months = [1]
+        start = 1997
 
-    for year in range(1997, 2025):
+    for year in range(start, 2025):
         cumulative_months.append(cumulative_months[-1] + 12)
         if year % 4 == 0:
             months = months_l
@@ -270,7 +276,7 @@ def cumulative():
 # calls cumulative() on its own--don't worry about it
 
 
-def seq_dates(df, focus):
+def seq_dates(df, focus, advice=False):
 
     df["start"] = min(df["date"])
     df["date_seq"] = df["date"] - df["start"]
@@ -279,11 +285,11 @@ def seq_dates(df, focus):
     df["date_seq"] = df["date_seq"] + 18
     m_seq = []
     for n_days in df["date_seq"]:
-        m_seq.append(cumul_to(n_days, "d"))
+        m_seq.append(cumul_to(n_days, "d", advice=advice))
     df["month_seq"] = m_seq
     y_seq = []
     for n_months in df["month_seq"]:
-        y_seq.append(cumul_to(n_months, "m"))
+        y_seq.append(cumul_to(n_months, "m", advice=advice))
 
     df["year"] = y_seq
 
@@ -293,21 +299,27 @@ def seq_dates(df, focus):
     return df
 
 
-def cumul_to(n, unit):
+def cumul_to(n, unit, advice=False):
 
-    cumul_both = cumulative()
+    cumul_both = cumulative(advice=advice)
     cumulative_days = cumul_both[0]
     cumulative_months = cumul_both[1]
 
     if unit in ["m", "month", "months"]:
         for months in cumulative_months:
             if n < months:
-                year = cumulative_months.index(months) + 1996
+                if advice==True:
+                    year = cumulative_months.index(months) + 1998
+                else:
+                    year = cumulative_months.index(months) + 1996
                 return year
     elif unit in ["d", "day", "days"]:
         for days in cumulative_days:
             if n < days:
-                month = cumulative_days.index(days) + 10
+                if advice==True:
+                    month = cumulative_days.index(days) + 1
+                else:
+                    month = cumulative_days.index(days) + 10
                 return month
     else:
         print(
