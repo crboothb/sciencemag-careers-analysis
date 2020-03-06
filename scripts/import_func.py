@@ -253,7 +253,7 @@ def cumulative(advice=False):
         cumulative_months = [13]
         start = 1997
     else:
-        cumulative_days = [30]
+        cumulative_days = [31]
         cumulative_months = [1]
         start = 1997
 
@@ -282,7 +282,10 @@ def seq_dates(df, focus, advice=False):
     df["date_seq"] = df["date"] - df["start"]
     df["date_seq"] = df["date_seq"].map(lambda x: str(x)[:-14])
     df["date_seq"] = df["date_seq"].astype(int)
-    df["date_seq"] = df["date_seq"] + 18
+    if advice==True:
+        df["date_seq"] = df["date_seq"] + 18
+    else:
+        df["date_seq"] = df["date_seq"] + 30
     m_seq = []
     for n_days in df["date_seq"]:
         m_seq.append(cumul_to(n_days, "d", advice=advice))
@@ -309,17 +312,14 @@ def cumul_to(n, unit, advice=False):
         for months in cumulative_months:
             if n < months:
                 if advice==True:
-                    year = cumulative_months.index(months) + 1998
+                    year = cumulative_months.index(months) + 1997
                 else:
                     year = cumulative_months.index(months) + 1996
                 return year
     elif unit in ["d", "day", "days"]:
         for days in cumulative_days:
             if n < days:
-                if advice==True:
-                    month = cumulative_days.index(days) + 1
-                else:
-                    month = cumulative_days.index(days) + 10
+                month = cumulative_days.index(days) + 1
                 return month
     else:
         print(
