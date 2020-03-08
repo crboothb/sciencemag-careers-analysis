@@ -98,7 +98,7 @@ def clean_text_df(df):
     print("processed1")
     for i in range(len(df)):
         lemmatized_list = []
-        text = df.loc[i]["text_Parsed_4"]
+        text = df.iloc[i]["text_Parsed_4"]
         text_words = text.split(" ")
         for word in text_words:
             lemmatized_list.append(wordnet_lemmatizer.lemmatize(word, pos="v"))
