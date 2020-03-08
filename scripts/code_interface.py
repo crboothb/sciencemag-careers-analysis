@@ -4,15 +4,21 @@ import pickle
 import random
 import re
 import string
-
 import pandas as pd
 
 import desc_vis as vis
 import import_func as imp
 import tags_work as tgs
 
-session = 1
+session = 9
+
 full_filename = "../data/by_article_fulltext_020920.jl"
+
+with open("pickles/sample200-2.pickle", "rb") as data:
+    sample200 = pickle.load(data)
+
+with open("pickles/sample200-2_chunks.pickle", "rb") as data:
+    sample200_chunks = pickle.load(data)
 
 # get full text dataset as a df
 # full_df = imp.init_df(full_filename, "full")
@@ -57,11 +63,6 @@ print("data loaded")
 # sample200 = random.sample(list(full_dict.index.values), 200)
 # sample200_chunks = []
 
-with open("pickles/sample200.pickle", "rb") as data:
-    sample200 = pickle.load(data)
-
-with open("pickles/sample200_chunks.pickle", "rb") as data:
-    sample200_chunks = pickle.load(data)
 
 
 # sample50 = [3188, 1591, 2152, 4044, 2789, 5685, 5191, 2360, 518, 189, 5509, 3033, 499, 2024, 3563, 4216, 1422, 3904, 3256, 420, 4940, 3397, 6087, 4548, 227, 4817, 1351, 765, 4161, 5139, 4899, 5243, 1334, 4234, 2629, 815, 5516, 2170, 1765, 3183, 5143, 3225, 1759, 5209, 5249, 4487, 3447, 4963, 2656, 825]
