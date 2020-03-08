@@ -88,5 +88,44 @@ for Product, category_id in sorted(category_codes.items()):
     # print("  . Most correlated bigrams:\n. {}".format('\n. '.join(bigrams[-2:])))
     # print("")
 
+# X_train
+with open('pickles/X_train.pickle', 'wb') as output:
+    pickle.dump(X_train, output)
+    
+# X_test    
+with open('pickles/X_test.pickle', 'wb') as output:
+    pickle.dump(X_test, output)
+    
+# y_train
+with open('pickles/y_train.pickle', 'wb') as output:
+    pickle.dump(y_train, output)
+    
+# y_test
+with open('pickles/y_test.pickle', 'wb') as output:
+    pickle.dump(y_test, output)
+    
+# df
+with open('pickles/df.pickle', 'wb') as output:
+    pickle.dump(df, output)
+    
+# features_train
+with open('pickles/features_train.pickle', 'wb') as output:
+    pickle.dump(features_train, output)
+
+# labels_train
+with open('pickles/labels_train.pickle', 'wb') as output:
+    pickle.dump(labels_train, output)
+
+# features_test
+with open('pickles/features_test.pickle', 'wb') as output:
+    pickle.dump(features_test, output)
+
+# labels_test
+with open('pickles/labels_test.pickle', 'wb') as output:
+    pickle.dump(labels_test, output)
+    
+# TF-IDF object
+with open('pickles/tfidf.pickle', 'wb') as output:
+    pickle.dump(tfidf, output)
 
 
