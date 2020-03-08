@@ -10,7 +10,7 @@ import desc_vis as vis
 import import_func as imp
 import tags_work as tgs
 
-session = 9
+session = 10
 
 full_filename = "../data/by_article_fulltext_020920.jl"
 
