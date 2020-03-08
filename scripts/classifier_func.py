@@ -15,7 +15,7 @@ import classifier_help as clh
 path_models = "Models/"
 
 # KNN
-path_knn = path_models + "best_knnc.pickle"
+path_knn = path_models + "best_knnc_2.pickle"
 with open(path_knn, "rb") as data:
     knn_model = pickle.load(data)
 
