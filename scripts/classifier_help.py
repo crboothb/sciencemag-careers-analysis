@@ -78,14 +78,11 @@ def pronouns(f_df, sample="none"):
     c_df = pd.DataFrame(counts4df)
     return c_df
 
-def category(df):
-    category_codes = {
-        1:'first',
-        2:'second',
-        3:'third'
-    }
 
-    df['Category'] = df['Category_Code']
-    df = df.replace({'Category':category_codes})
-    df = df.rename(columns={'category':'Category_Code'})
-    return(df)
+def category(df):
+    category_codes = {1: "first", 2: "second", 3: "third"}
+
+    df["Category"] = df["Category_Code"]
+    df = df.replace({"Category": category_codes})
+    df = df.rename(columns={"category": "Category_Code"})
+    return df

@@ -248,7 +248,7 @@ def cumulative(advice=False):
     months_l = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
     # I need a list of cumulative days at the end of each month going forward
-    if advice==False:
+    if advice == False:
         cumulative_days = [31, 61, 92]
         cumulative_months = [13]
         start = 1997
@@ -282,7 +282,7 @@ def seq_dates(df, focus, advice=False):
     df["date_seq"] = df["date"] - df["start"]
     df["date_seq"] = df["date_seq"].map(lambda x: str(x)[:-14])
     df["date_seq"] = df["date_seq"].astype(int)
-    if advice==True:
+    if advice == True:
         df["date_seq"] = df["date_seq"] + 30
     else:
         df["date_seq"] = df["date_seq"] + 18
@@ -311,7 +311,7 @@ def cumul_to(n, unit, advice=False):
     if unit in ["m", "month", "months"]:
         for months in cumulative_months:
             if n < months:
-                if advice==True:
+                if advice == True:
                     year = cumulative_months.index(months) + 1997
                 else:
                     year = cumulative_months.index(months) + 1996

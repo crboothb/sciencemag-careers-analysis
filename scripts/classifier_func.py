@@ -5,6 +5,7 @@ import pickle
 import nltk
 import pandas as pd
 from nltk.corpus import stopwords
+
 # from nltk.tokenize import punkt
 # from nltk.corpus.reader import wordnet
 from nltk.stem import WordNetLemmatizer
@@ -77,6 +78,7 @@ pronouns = [
 ]
 stop_words_wo_pronouns = [word for word in stop_words if word not in pronouns]
 
+
 def clean_text_df(df):
     lemmatized_text_list = []
 
@@ -86,9 +88,7 @@ def clean_text_df(df):
     df["text_Parsed_1"] = df["text_Parsed_1"].str.replace("'s'", "")
     df["text_Parsed_1"] = df["text_Parsed_1"].str.replace("'", "")
     df["text_Parsed_2"] = clh.no_punctuation(df["text_Parsed_1"], quotes=True)
-    df["text_Parsed_3"] = [
-        clh.replace_quotes(text) for text in df["text_Parsed_2"]
-    ]
+    df["text_Parsed_3"] = [clh.replace_quotes(text) for text in df["text_Parsed_2"]]
     for punct_sign in punctuation_signs:
         df["text_Parsed_3"] = df["text_Parsed_3"].str.replace(punct_sign, "")
     for punct_sign_sp in list("-/"):
@@ -110,7 +110,16 @@ def clean_text_df(df):
     for stop_word in stop_words_wo_pronouns:
         regex_stopword = r"\b" + stop_word + r"\b"
         df["text_Parsed_6"] = df["text_Parsed_6"].str.replace(regex_stopword, "")
-    df = df.drop(["text_Parsed_1","text_Parsed_2","text_Parsed_3","text_Parsed_4","text_Parsed_5"], axis=1)
+    df = df.drop(
+        [
+            "text_Parsed_1",
+            "text_Parsed_2",
+            "text_Parsed_3",
+            "text_Parsed_4",
+            "text_Parsed_5",
+        ],
+        axis=1,
+    )
     df = df.rename(columns={"text_Parsed_6": "text_Parsed"})
     # print(df.head())
 
@@ -118,6 +127,7 @@ def clean_text_df(df):
     # features = tfidf.transform(df).toarray()
 
     return df
+
 
 def designate_person_from_df(df):
 
@@ -132,7 +142,7 @@ def designate_person_from_df(df):
     for i in range(len(df)):
         texts = df["text_Parsed"]
         features = tfidf.transform([texts[i]]).toarray()
-    
+
         prediction_knn = knn_model.predict(features)[0]
         # prediction_knn_proba = knn_model.predict_proba(create_features_from_text(text))[0]
 
@@ -143,6 +153,7 @@ def designate_person_from_df(df):
     return pred_list
 
     # return features
+
 
 # def create_features_from_text(text):
 

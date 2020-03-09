@@ -10,13 +10,11 @@ full_filename = "../data/by_article_fulltext_020920.jl"
 
 path_df = "pickles/sample200.pickle"
 
-with open(path_df, 'rb') as data:
+with open(path_df, "rb") as data:
     old_sample = pickle.load(data)
 
 
-full_dict = imp.init_df(
-    full_filename, "full", "df"
-)
+full_dict = imp.init_df(full_filename, "full", "df")
 
 
 def drop_short(df):
