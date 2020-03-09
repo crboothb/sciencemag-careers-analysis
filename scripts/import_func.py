@@ -283,9 +283,9 @@ def seq_dates(df, focus, advice=False):
     df["date_seq"] = df["date_seq"].map(lambda x: str(x)[:-14])
     df["date_seq"] = df["date_seq"].astype(int)
     if advice==True:
-        df["date_seq"] = df["date_seq"] + 18
-    else:
         df["date_seq"] = df["date_seq"] + 30
+    else:
+        df["date_seq"] = df["date_seq"] + 18
     m_seq = []
     for n_days in df["date_seq"]:
         m_seq.append(cumul_to(n_days, "d", advice=advice))
