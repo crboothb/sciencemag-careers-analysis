@@ -290,6 +290,8 @@ def seq_dates(df, focus, advice=False):
     for n_days in df["date_seq"]:
         m_seq.append(cumul_to(n_days, "d", advice=advice))
     df["month_seq"] = m_seq
+    if advice == False:
+        df["month_seq"] = df["month_seq"] + 9
     y_seq = []
     for n_months in df["month_seq"]:
         y_seq.append(cumul_to(n_months, "m", advice=advice))
