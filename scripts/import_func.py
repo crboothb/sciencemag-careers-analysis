@@ -377,7 +377,7 @@ def one_time(df, theshold=1):
     if "column1" not in df.columns.values:
         df = id_columns(df)
     df["one_time"] = np.where(
-        (df["n_posts_author"] < 4) | (df["column2"] == "no"),
+        (df["n_posts_author"] < 4) & (df["column2"] == "no"),
         "yes",
         "no",
     )
