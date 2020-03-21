@@ -33,13 +33,15 @@ test_full_filename = "../data/full_text.jl"
 full_df = imp.init_df(full_filename, "full")
 print("imported")
 
+print(full_df.head())
+
 # full_df = full_df[:20]
 
-full_df = cls.clean_text_df(full_df)
-person_automated = cls.designate_person_from_df(full_df)
-full_df["person_automated"] = person_automated
+# full_df = cls.clean_text_df(full_df)
+# person_automated = cls.designate_person_from_df(full_df)
+# full_df["person_automated"] = person_automated
 
-print(full_df.head())
+# print(full_df.head())
 
 ###########
 
