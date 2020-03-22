@@ -238,6 +238,7 @@ def init_df(filename, focus, test=False, out_form="df", advice=False):
     # df = df[df.year<2020]
     if focus != "editorial":
         df = id_columns(df)
+        df = id_advice(df)
         df = one_time(df)
     if test == True:
         print(df.head())
@@ -377,8 +378,12 @@ def one_time(df, theshold=1):
     if "column1" not in df.columns.values:
         df = id_columns(df)
     df["one_time"] = np.where(
-        (df["n_posts_author"] < 4) & (df["column2"] == "no"),
+        (df["n_posts_author"] < 4) & (df["column2"] == "no") & (df["advice"] == "no"),
         "yes",
         "no",
     )
+    return df
+
+def id_advice(df):
+    df["advice"] = ["yes" if "advice" in x else "no" for x in df["tags"]]
     return df
