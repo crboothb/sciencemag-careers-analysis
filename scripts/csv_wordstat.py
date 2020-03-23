@@ -16,15 +16,15 @@ full_filename = "../data/by_article_fulltext_020920.jl"
 
 full_df = imp.init_df(full_filename, "full")
 full_df = full_df[full_df["year"] < 2020]
+# print(full_df.head())
 print(len(full_df))
 full_df["lang"] = ["en" if detect(x) == "en" else "no" for x in full_df["text"]]
 full_df = full_df[full_df.lang == "en"]
 print(len(full_df))
 
-full_df["advice"] = ["yes" if "advice" in x else "no" for x in full_df["tags"]]
-
 
 full_df = full_df.drop(["date", "time", "date_seq", "lang"], axis=1,)
+
 
 # full_df.to_csv("../data/full_raw.csv", index=False)
 
