@@ -1,4 +1,5 @@
 import csv
+import numpy as np
 from langdetect import detect
 
 import import_func as imp
@@ -16,7 +17,24 @@ full_filename = "../data/by_article_fulltext_020920.jl"
 
 full_df = imp.init_df(full_filename, "full")
 full_df = full_df[full_df["year"] < 2020]
+full_df["probnews"] = np.where(
+        (full_df["advice"] == "no") & (full_df["one_time"] == "no"),
+        "yes",
+        "no",
+    )
 # print(full_df.head())
+
+full_df["type"] = np.where(
+    (full_df["advice"]=="yes"),
+    "advice",
+    np.where(
+        (full_df["one_time"]=="yes"),
+        "WL",
+        "news",
+    )
+)
+# print(full_df.tail())
+
 print(len(full_df))
 full_df["lang"] = ["en" if detect(x) == "en" else "no" for x in full_df["text"]]
 full_df = full_df[full_df.lang == "en"]
@@ -26,7 +44,7 @@ print(len(full_df))
 full_df = full_df.drop(["date", "time", "date_seq", "lang"], axis=1,)
 
 
-# full_df.to_csv("../data/full_raw.csv", index=False)
+full_df.to_csv("../data/full_raw.csv", index=False)
 
 full_df["no_quotes"] = [clh.replace_quotes(text) for text in full_df["text"]]
 full_df_q = full_df.drop(["text"], axis=1,)
