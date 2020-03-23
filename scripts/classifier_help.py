@@ -87,8 +87,27 @@ def category(df):
     df = df.rename(columns={"category": "Category_Code"})
     return df
 
+
 def modals(f_df, sample="none"):
-    modal_list = [" can ", " could ", " cant ", " couldnt ", " may ", " might "," shall "," should "," shouldnt "," will "," would "," wont "," wouldnt "," must "," ought ", " had better "," have to "]
+    modal_list = [
+        " can ",
+        " could ",
+        " cant ",
+        " couldnt ",
+        " may ",
+        " might ",
+        " shall ",
+        " should ",
+        " shouldnt ",
+        " will ",
+        " would ",
+        " wont ",
+        " wouldnt ",
+        " must ",
+        " ought ",
+        " had better ",
+        " have to ",
+    ]
     # third_pronouns = []
 
     if sample == "none":
