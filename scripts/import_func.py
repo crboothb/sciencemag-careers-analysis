@@ -366,7 +366,7 @@ def id_columns(df, threshold=5):
     return df_authors
 
 
-def one_time(df, threshold=3):
+def one_time(df, threshold=1):
     if "column1" not in df.columns.values:
         df = id_columns(df)
     df["one_time"] = np.where(
