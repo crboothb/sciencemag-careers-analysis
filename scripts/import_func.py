@@ -331,13 +331,38 @@ def cumul_to(n, unit):
 
 
 def author_num(df, output):
-    authors = df["authors"].value_counts()
-    authors_df = pd.DataFrame(authors)
+    # authors = df["authors"].value_counts()
+    authors_count = {}
+    for byline in df.authors:
+        byline = byline.split(", ")
+        for author in byline:
+            if author in authors_count.keys():
+                authors_count[author] += 1
+            else:
+                authors_count[author] = 1
+    for byline in df.authors:
+        if ", " in byline:
+            coauthors = byline.split(", ")
+            count = 0
+            for author in coauthors:
+                count+=authors_count[author]
+            if byline not in authors_count.keys():
+                authors_count[byline] = count//len(coauthors)
+            else:
+                authors_count[byline] += count//len(coauthors)
+    
+    authors2df = {"author":[],"n_posts_author":[]}
+    for key in authors_count.keys():
+        authors2df["author"].append(key)
+        authors2df["n_posts_author"].append(authors_count[key])
+
+
+    authors_df = pd.DataFrame(authors2df)
 
     if output == "count":
         return authors_df
 
-    authors_df["writer"] = authors_df.index
+    authors_df["writer"] = authors_df.author
     authors_df = authors_df.rename(columns={"authors": "n_posts_author"})
     tags_authors = pd.merge(df, authors_df, left_on="authors", right_on="writer")
     tags_authors.drop("writer", axis=1, inplace=True)
