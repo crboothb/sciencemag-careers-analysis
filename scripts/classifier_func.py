@@ -79,16 +79,17 @@ pronouns = [
 stop_words_wo_pronouns = [word for word in stop_words if word not in pronouns]
 
 
-def clean_text_df(df):
+def clean_text_df(df, col="text"):
     lemmatized_text_list = []
 
-    df["text_Parsed_1"] = df["text"].str.replace("\r", " ")
+    df["text_Parsed_1"] = df[col].str.replace("\r", " ")
     df["text_Parsed_1"] = df["text_Parsed_1"].str.replace("\n", " ")
     df["text_Parsed_1"] = df["text_Parsed_1"].str.replace("    ", " ")
     df["text_Parsed_1"] = df["text_Parsed_1"].str.replace("'s'", "")
     df["text_Parsed_1"] = df["text_Parsed_1"].str.replace("'", "")
     df["text_Parsed_2"] = clh.no_punctuation(df["text_Parsed_1"], quotes=True)
-    df["text_Parsed_3"] = [clh.replace_quotes(text) for text in df["text_Parsed_2"]]
+    df["text_Parsed_3"] = df["text_Parsed_2"]
+    # df["text_Parsed_3"] = [clh.replace_quotes(text) for text in df["text_Parsed_2"]]
     for punct_sign in punctuation_signs:
         df["text_Parsed_3"] = df["text_Parsed_3"].str.replace(punct_sign, "")
     for punct_sign_sp in list("-/"):
@@ -101,7 +102,8 @@ def clean_text_df(df):
         text = df.iloc[i]["text_Parsed_4"]
         text_words = text.split(" ")
         for word in text_words:
-            lemmatized_list.append(wordnet_lemmatizer.lemmatize(word, pos="v"))
+            # lemmatized_list.append(wordnet_lemmatizer.lemmatize(word, pos="v"))
+            lemmatized_list.append(wordnet_lemmatizer.lemmatize(word))
         lemmatized_text = " ".join(lemmatized_list)
         lemmatized_text_list.append(lemmatized_text)
     df["text_Parsed_5"] = lemmatized_text_list
@@ -120,7 +122,7 @@ def clean_text_df(df):
         ],
         axis=1,
     )
-    df = df.rename(columns={"text_Parsed_6": "text_Parsed"})
+    df = df.rename(columns={"text_Parsed_6": col+"_Parsed"})
     # print(df.head())
 
     # TF-IDF
