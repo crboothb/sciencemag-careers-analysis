@@ -27,6 +27,7 @@ wordstat/
 Latest-News-Classifier/
 writing/
 figs/
+booklda/
 
 # file extensions
 *.pyc
