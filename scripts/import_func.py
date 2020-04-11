@@ -240,7 +240,7 @@ def init_df(filename, focus, test=False, out_form="df", genre="none"):
 
     df = out
     if genre != "WL":
-        df = seq_dates(df, focus)
+        df = seq_dates(df, focus, genre=genre)
     # remove any articles published after 2019
     # df = df[df.year<2020]
     if focus != "editorial":
@@ -253,12 +253,12 @@ def init_df(filename, focus, test=False, out_form="df", genre="none"):
     return df
 
 
-def cumulative(advice=False):
+def cumulative(genre="none"):
     months_r = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     months_l = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
     # I need a list of cumulative days at the end of each month going forward
-    if advice == False:
+    if genre != "advice":
         cumulative_days = [31, 61, 92]
         cumulative_months = [13]
         start = 1997
@@ -286,25 +286,25 @@ def cumulative(advice=False):
 # calls cumulative() on its own--don't worry about it
 
 
-def seq_dates(df, focus, advice=False):
+def seq_dates(df, focus, genre="none"):
 
     df["start"] = min(df["date"])
     df["date_seq"] = df["date"] - df["start"]
     df["date_seq"] = df["date_seq"].map(lambda x: str(x)[:-14])
     df["date_seq"] = df["date_seq"].astype(int)
-    if advice == True:
+    if genre == "advice":
         df["date_seq"] = df["date_seq"] + 30
     else:
         df["date_seq"] = df["date_seq"] + 18
     m_seq = []
     for n_days in df["date_seq"]:
-        m_seq.append(cumul_to(n_days, "d", advice=advice))
+        m_seq.append(cumul_to(n_days, "d", genre=genre))
     df["month_seq"] = m_seq
-    if advice == False:
+    if genre != "advice":
         df["month_seq"] = df["month_seq"] + 9
     y_seq = []
     for n_months in df["month_seq"]:
-        y_seq.append(cumul_to(n_months, "m", advice=advice))
+        y_seq.append(cumul_to(n_months, "m", genre=genre))
 
     df["year"] = y_seq
 
@@ -314,16 +314,16 @@ def seq_dates(df, focus, advice=False):
     return df
 
 
-def cumul_to(n, unit, advice=False):
+def cumul_to(n, unit, genre="none"):
 
-    cumul_both = cumulative(advice=advice)
+    cumul_both = cumulative(genre=genre)
     cumulative_days = cumul_both[0]
     cumulative_months = cumul_both[1]
 
     if unit in ["m", "month", "months"]:
         for months in cumulative_months:
             if n < months:
-                if advice == True:
+                if genre == "advice":
                     year = cumulative_months.index(months) + 1997
                 else:
                     year = cumulative_months.index(months) + 1996
