@@ -46,7 +46,7 @@ def count_pro(clean_text, person):
 def pronouns(f_df, sample="none"):
     first_pronouns = [" i ", " im ", " ive ", " id ", " my ", " me ", " myself "]
     second_pronouns = [" you ", " youre ", " youve ", " youd ", " your ", " yourself "]
-    third_pronouns = []
+    # third_pronouns = []
 
     if sample == "none":
         sample = [i for i in range(len(f_df))]
@@ -57,7 +57,10 @@ def pronouns(f_df, sample="none"):
     for samp in sample:
         count1 = 0
         count2 = 0
-        w_text = no_punctuation(f_df["text"][samp], quotes=True)
+        try:
+            w_text = no_punctuation(f_df.iloc[samp]["text"], quotes=True)
+        except:
+            continue
         w_text = replace_quotes(w_text)
         w_text = no_punctuation(w_text, quotes=False)
         for pro in first_pronouns:
@@ -67,9 +70,67 @@ def pronouns(f_df, sample="none"):
         wc = len(w_text.split(" "))
         counts[samp] = {"first": count1, "second": count2, "wc": wc}
         counts4df["id"].append(samp)
-        counts4df["year"].append(f_df["year"][samp])
+        counts4df["year"].append(f_df.iloc[samp]["year"])
         counts4df["first"].append(count1)
         counts4df["second"].append(count2)
+        counts4df["wc"].append(wc)
+
+    c_df = pd.DataFrame(counts4df)
+    return c_df
+
+
+def category(df):
+    category_codes = {1: "first", 2: "second", 3: "third"}
+
+    df["Category"] = df["Category_Code"]
+    df = df.replace({"Category": category_codes})
+    df = df.rename(columns={"category": "Category_Code"})
+    return df
+
+
+def modals(f_df, sample="none"):
+    modal_list = [
+        " can ",
+        " could ",
+        " cant ",
+        " couldnt ",
+        " may ",
+        " might ",
+        " shall ",
+        " should ",
+        " shouldnt ",
+        " will ",
+        " would ",
+        " wont ",
+        " wouldnt ",
+        " must ",
+        " ought ",
+        " had better ",
+        " have to ",
+    ]
+    # third_pronouns = []
+
+    if sample == "none":
+        sample = [i for i in range(len(f_df))]
+
+    counts = {}
+    counts4df = {"id": [], "year": [], "modals": [], "wc": []}
+
+    for samp in sample:
+        count = 0
+        try:
+            w_text = no_punctuation(f_df.iloc[samp]["text"], quotes=True)
+        except:
+            continue
+        w_text = replace_quotes(w_text)
+        w_text = no_punctuation(w_text, quotes=False)
+        for verb in modal_list:
+            count += w_text.count(verb)
+        wc = len(w_text.split(" "))
+        counts[samp] = {"modals": count, "wc": wc}
+        counts4df["id"].append(samp)
+        counts4df["year"].append(f_df.iloc[samp]["year"])
+        counts4df["modals"].append(count)
         counts4df["wc"].append(wc)
 
     c_df = pd.DataFrame(counts4df)
