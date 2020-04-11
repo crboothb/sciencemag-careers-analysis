@@ -6,7 +6,7 @@ import import_func as imp
 import tags_work as tgs
 
 # import desc_vis as vis
-import classifier_func as cl
+import classifier_func as cla
 import classifier_help as clh
 
 full_advice = "../data/genre_advice_full_021520.jl"
@@ -51,14 +51,14 @@ full_df_q = full_df.drop(["text"], axis=1,)
 
 full_df_q.to_csv("../data/full_no_quote.csv", index=False)
 
-full_df = cl.clean_text_df(full_df)
+full_df = cla.clean_text_df(full_df)
 full_df_c = full_df.drop(["text", "no_quotes"], axis=1,)
 
 full_df_c.to_csv("../data/full_clean.csv", index=False)
 
 print("clean 1 done")
 
-full_df = cl.clean_text_df(full_df, col="no_quotes")
+full_df = cla.clean_text_df(full_df, col="no_quotes")
 full_df_c_nq = full_df.drop(["text", "no_quotes", "text_Parsed"], axis=1,)
 full_df_c_nq.to_csv("../data/full_clean_no_quote.csv", index=False)
 
