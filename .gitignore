@@ -22,10 +22,12 @@ __pycache__
 # folders
 testfiles/
 lit/    
-#data/
+data/
+wordstat/
 Latest-News-Classifier/
 writing/
 figs/
+booklda/
 
 # file extensions
 *.pyc

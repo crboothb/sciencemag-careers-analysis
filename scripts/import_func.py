@@ -22,7 +22,7 @@ def import_jl(fname):
 # out_form="dict" or "df"
 
 
-def process(list, focus, out_form):
+def process(list, focus, out_form, genre = "none"):
 
     list_temp1 = []
     for line in list:
@@ -69,7 +69,8 @@ def process(list, focus, out_form):
 
         if out_form == "df":
             editorial_df = pd.DataFrame(editorial_dict)
-            editorial_df["date"] = pd.to_datetime(editorial_df.date, format="%b-%d-%Y")
+            if genre != "WL":
+                editorial_df["date"] = pd.to_datetime(editorial_df.date, format="%b-%d-%Y")
             editorial_df.sort_values(by=["date"], inplace=True)
             out = editorial_df
         elif out_form == "dict":
@@ -196,7 +197,7 @@ def process(list, focus, out_form):
                 tags_dict["bio"].append(bio_text)
 
         # print(tags_dict)
-        if out_form == "df":
+        if out_form == "df" and genre!="WL":
             tags_df = pd.DataFrame(tags_dict)
             tags_df.head()
             tags_df["date"] = pd.to_datetime(tags_df.date, format="%b-%d-%Y")
@@ -205,7 +206,7 @@ def process(list, focus, out_form):
             out = tags_df
         elif out_form == "dict":
             out = tags_dict
-        elif out_form == "both":
+        elif out_form == "both" and genre!="WL":
             tags_df = pd.DataFrame(tags_dict)
             tags_df.head()
             tags_df["date"] = pd.to_datetime(tags_df.date, format="%b-%d-%Y")
@@ -215,7 +216,10 @@ def process(list, focus, out_form):
             out2 = tags_dict
             out = [out1, out2]
         else:
-            print("please enter third argument, 'out_form' as 'df','dict', or 'both' ")
+            # print("please enter third argument, 'out_form' as 'df','dict', or 'both' ")
+            tags_df = pd.DataFrame(tags_dict)
+            out = tags_df
+            
 
     else:
         print("please enter second argument 'focus' as 'editorial','tags', or 'full' ")
@@ -228,16 +232,20 @@ def process(list, focus, out_form):
 # I would want later versions of this to be more flexible--maybe allowing the start and end times to be set in the function?
 
 
-def init_df(filename, focus, test=False, out_form="df"):
+def init_df(filename, focus, test=False, out_form="df", genre="none"):
     raw = import_jl(filename)
-    out = process(raw, focus=focus, out_form=out_form)
+    out = process(raw, focus=focus, out_form=out_form ,genre=genre)
 
     df = out
-    df = seq_dates(df, focus)
+    if genre != "WL":
+        df = seq_dates(df, focus)
     # remove any articles published after 2019
     # df = df[df.year<2020]
     if focus != "editorial":
         df = id_columns(df)
+        df = id_advice(df)
+        df = one_time(df)
+
     if test == True:
         print(df.head())
     return df
@@ -323,13 +331,38 @@ def cumul_to(n, unit):
 
 
 def author_num(df, output):
-    authors = df["authors"].value_counts()
-    authors_df = pd.DataFrame(authors)
+    # authors = df["authors"].value_counts()
+    authors_count = {}
+    for byline in df.authors:
+        byline = byline.split(", ")
+        for author in byline:
+            if author in authors_count.keys():
+                authors_count[author] += 1
+            else:
+                authors_count[author] = 1
+    for byline in df.authors:
+        if ", " in byline:
+            coauthors = byline.split(", ")
+            count = 0
+            for author in coauthors:
+                count+=authors_count[author]
+            if byline not in authors_count.keys():
+                authors_count[byline] = count//len(coauthors)
+            else:
+                authors_count[byline] += count//len(coauthors)
+    
+    authors2df = {"author":[],"n_posts_author":[]}
+    for key in authors_count.keys():
+        authors2df["author"].append(key)
+        authors2df["n_posts_author"].append(authors_count[key])
+
+
+    authors_df = pd.DataFrame(authors2df)
 
     if output == "count":
         return authors_df
 
-    authors_df["writer"] = authors_df.index
+    authors_df["writer"] = authors_df.author
     authors_df = authors_df.rename(columns={"authors": "n_posts_author"})
     tags_authors = pd.merge(df, authors_df, left_on="authors", right_on="writer")
     tags_authors.drop("writer", axis=1, inplace=True)
@@ -358,8 +391,16 @@ def id_columns(df, threshold=5):
     return df_authors
 
 
-def one_time(df, theshold=1):
+def one_time(df, threshold=1):
     if "column1" not in df.columns.values:
         df = id_columns(df)
-    onetime_df = df[(df["n_posts_author"] == 1) & (df["column2"] == "no")]
-    return onetime_df
+    df["one_time"] = np.where(
+        (df["n_posts_author"] < threshold+1) & (df["column2"] == "no") & (df["advice"] == "no"),
+        "yes",
+        "no",
+    )
+    return df
+
+def id_advice(df):
+    df["advice"] = ["yes" if "advice" in x else "no" for x in df["tags"]]
+    return df
