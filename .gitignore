@@ -35,6 +35,10 @@ booklda/
 *.png
 *.jpeg
 *.csv
+*.mm
+*.mm.index
+*.index
+*.dict
 
 # html files
 *.html
