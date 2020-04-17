@@ -7,13 +7,37 @@ import pandas as pd
 ## These functions import and do the initial data processing,
 ## and they assemble the working dataframes
 
+# the function that houses all teh other initalizaiton functions
+
+def init_df(filename, focus, test=False, out_form="df", genre="none"):
+
+    raw = import_jl(filename)
+    out = process(raw, focus=focus, out_form=out_form ,genre=genre)
+
+    df = out
+    if genre != "WL":
+        df = seq_dates(df, focus, genre=genre)
+    # remove any articles published after 2019
+    # df = df[df.year<2020]
+    if focus != "editorial":
+        df = id_columns(df)
+        df = id_advice(df)
+        df = one_time(df)
+        df = id_x(df, "career-related policy")
+        df = id_x(df, 'working life')
+        df = id_x(df, "career profiles")
+        df = id_x(df, "issues and perspectives")
+
+    if test == True:
+        print(df.head())
+    return df
+
 
 def import_jl(fname):
     """Import .jl files. Works fine for both ediorial and tags takes 
     path+filename as string as filename argument returns contents as a list, 
     with each line in file as a list item"""
     return open(fname, "r").readlines()
-
 
 # initially process content from imported jl files
 # takes list of lines in original file as list argument
@@ -227,30 +251,6 @@ def process(list, focus, out_form, genre = "none"):
     return out
 
 
-# Why am I doing this? I'm trying to calculate the months from the date_seq
-# Right now, this function returns a sequence from the actual start of the publications to the most recent publications
-# I would want later versions of this to be more flexible--maybe allowing the start and end times to be set in the function?
-
-
-
-def init_df(filename, focus, test=False, out_form="df", genre="none"):
-
-    raw = import_jl(filename)
-    out = process(raw, focus=focus, out_form=out_form ,genre=genre)
-
-    df = out
-    if genre != "WL":
-        df = seq_dates(df, focus, genre=genre)
-    # remove any articles published after 2019
-    # df = df[df.year<2020]
-    if focus != "editorial":
-        df = id_columns(df)
-        df = id_advice(df)
-        df = one_time(df)
-
-    if test == True:
-        print(df.head())
-    return df
 
 
 def cumulative(genre="none"):
@@ -419,4 +419,9 @@ def one_time(df, threshold=1):
 
 def id_advice(df):
     df["advice"] = ["yes" if "advice" in x else "no" for x in df["tags"]]
+    return df
+
+def id_x(df, tag):
+    tag_no_space = tag.replace(" ","_").replace("-","_")
+    df[tag_no_space] = ["yes" if tag in x else "no" for x in df["tags"]]
     return df
