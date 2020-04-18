@@ -222,7 +222,7 @@ def process(list, focus, out_form, genre = "none"):
                         break
                     if record == True:
                         f_text_list.append(string.strip().replace("\n", ""))
-                f_text = "\n".join(f_text_list)
+                f_text = "".join(f_text_list)
                 # print(w_text)
                 # print("#######################################")
                 # last 16 lines are junk
