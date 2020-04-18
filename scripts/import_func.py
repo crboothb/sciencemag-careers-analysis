@@ -11,22 +11,31 @@ import pandas as pd
 
 def init_df(filename, focus, test=False, out_form="df", genre="none"):
 
+    categories = [
+        "ctscinet",
+        "career-related policy",
+        "working life",
+        "career profiles",
+        "life and career balance",
+        "myscinet",
+        "issues and perspectives",
+        "advice"
+        ]
+
     raw = import_jl(filename)
     out = process(raw, focus=focus, out_form=out_form ,genre=genre)
 
     df = out
     if genre != "WL":
         df = seq_dates(df, focus, genre=genre)
+    for keyword in categories:
+        df = id_x(df, keyword)
     # remove any articles published after 2019
     # df = df[df.year<2020]
     if focus != "editorial":
+        # df = id_advice(df)
         df = id_columns(df)
-        df = id_advice(df)
         df = one_time(df)
-        df = id_x(df, "career-related policy")
-        df = id_x(df, 'working life')
-        df = id_x(df, "career profiles")
-        df = id_x(df, "issues and perspectives")
 
     if test == True:
         print(df.head())
