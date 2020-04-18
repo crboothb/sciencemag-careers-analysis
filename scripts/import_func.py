@@ -31,7 +31,7 @@ def init_df(filename, focus, test=False, out_form="df", genre="none"):
     for keyword in categories:
         df = id_x(df, keyword)
     # remove any articles published after 2019
-    # df = df[df.year<2020]
+    df = df[df.year<2020]
     if focus != "editorial":
         # df = id_advice(df)
         df = id_columns(df)
@@ -221,7 +221,7 @@ def process(list, focus, out_form, genre = "none"):
                     if "enter keywords, locations or job types" in string:
                         break
                     if record == True:
-                        f_text_list.append(string.replace("\n", ""))
+                        f_text_list.append(string.strip().replace("\n", ""))
                 f_text = "\n".join(f_text_list)
                 # print(w_text)
                 # print("#######################################")
