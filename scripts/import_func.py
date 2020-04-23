@@ -24,9 +24,9 @@ def init_df(filename, focus, test=False, out_form="df", genre="none", categories
     elif categories == "limited":
         categories = [
         # "ctscinet", # no defined genre
-        "career_related_policy",
-        "working_life",
-        "career_profiles",
+        "career-related policy",
+        "working life",
+        "career profiles",
         # "life_and_career_balance",# no defined genre
         # "myscinet", # no defined genre
         # "issues_and_perspectives", # too much overlap with advice, no defined genre
