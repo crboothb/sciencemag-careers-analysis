@@ -9,7 +9,10 @@ import pandas as pd
 
 # the function that houses all teh other initalizaiton functions
 
-def init_df(filename, focus, test=False, out_form="df", genre="none", categories="limited"):
+
+def init_df(
+    filename, focus, test=False, out_form="df", genre="none", categories="limited"
+):
     if categories == "all":
         categories = [
             "ctscinet",
@@ -19,24 +22,26 @@ def init_df(filename, focus, test=False, out_form="df", genre="none", categories
             "life and career balance",
             "myscinet",
             "issues and perspectives",
-            "advice"
-            ]
+            "advice",
+        ]
     elif categories == "limited":
         categories = [
-        # "ctscinet", # no defined genre
-        "career-related policy",
-        "working life",
-        "career profiles",
-        # "life_and_career_balance",# no defined genre
-        # "myscinet", # no defined genre
-        # "issues_and_perspectives", # too much overlap with advice, no defined genre
-        "advice"
+            # "ctscinet", # no defined genre
+            "career-related policy",
+            "working life",
+            "career profiles",
+            # "life_and_career_balance",# no defined genre
+            # "myscinet", # no defined genre
+            # "issues_and_perspectives", # too much overlap with advice, no defined genre
+            "advice",
         ]
     else:
-        print("enter either all or limited for categories. but you probably want limited")
+        print(
+            "enter either all or limited for categories. but you probably want limited"
+        )
 
     raw = import_jl(filename)
-    out = process(raw, focus=focus, out_form=out_form ,genre=genre)
+    out = process(raw, focus=focus, out_form=out_form, genre=genre)
 
     df = out
     if genre != "WL":
@@ -44,7 +49,7 @@ def init_df(filename, focus, test=False, out_form="df", genre="none", categories
     for keyword in categories:
         df = id_x(df, keyword)
     # remove any articles published after 2019
-    df = df[df.year<2020]
+    df = df[df.year < 2020]
     if focus != "editorial":
         # df = id_advice(df)
         df = id_columns(df)
@@ -61,6 +66,7 @@ def import_jl(fname):
     with each line in file as a list item"""
     return open(fname, "r").readlines()
 
+
 # initially process content from imported jl files
 # takes list of lines in original file as list argument
 # takes "editorial", "tags", or "full" as focus argument to indicate whether it's the editorial or tags
@@ -68,7 +74,7 @@ def import_jl(fname):
 # out_form="dict" or "df"
 
 
-def process(list, focus, out_form, genre = "none"):
+def process(list, focus, out_form, genre="none"):
 
     list_temp1 = []
     for line in list:
@@ -116,7 +122,9 @@ def process(list, focus, out_form, genre = "none"):
         if out_form == "df":
             editorial_df = pd.DataFrame(editorial_dict)
             if genre != "WL":
-                editorial_df["date"] = pd.to_datetime(editorial_df.date, format="%b-%d-%Y")
+                editorial_df["date"] = pd.to_datetime(
+                    editorial_df.date, format="%b-%d-%Y"
+                )
             editorial_df.sort_values(by=["date"], inplace=True)
             out = editorial_df
         elif out_form == "dict":
@@ -243,7 +251,7 @@ def process(list, focus, out_form, genre = "none"):
                 tags_dict["bio"].append(bio_text)
 
         # print(tags_dict)
-        if out_form == "df" and genre!="WL":
+        if out_form == "df" and genre != "WL":
             tags_df = pd.DataFrame(tags_dict)
             tags_df.head()
             tags_df["date"] = pd.to_datetime(tags_df.date, format="%b-%d-%Y")
@@ -252,7 +260,7 @@ def process(list, focus, out_form, genre = "none"):
             out = tags_df
         elif out_form == "dict":
             out = tags_dict
-        elif out_form == "both" and genre!="WL":
+        elif out_form == "both" and genre != "WL":
             tags_df = pd.DataFrame(tags_dict)
             tags_df.head()
             tags_df["date"] = pd.to_datetime(tags_df.date, format="%b-%d-%Y")
@@ -265,14 +273,11 @@ def process(list, focus, out_form, genre = "none"):
             # print("please enter third argument, 'out_form' as 'df','dict', or 'both' ")
             tags_df = pd.DataFrame(tags_dict)
             out = tags_df
-            
 
     else:
         print("please enter second argument 'focus' as 'editorial','tags', or 'full' ")
 
     return out
-
-
 
 
 def cumulative(genre="none"):
@@ -383,17 +388,16 @@ def author_num(df, output):
             coauthors = byline.split(", ")
             count = 0
             for author in coauthors:
-                count+=authors_count[author]
+                count += authors_count[author]
             if byline not in authors_count.keys():
-                authors_count[byline] = count//len(coauthors)
+                authors_count[byline] = count // len(coauthors)
             else:
-                authors_count[byline] += count//len(coauthors)
-    
-    authors2df = {"author":[],"n_posts_author":[]}
+                authors_count[byline] += count // len(coauthors)
+
+    authors2df = {"author": [], "n_posts_author": []}
     for key in authors_count.keys():
         authors2df["author"].append(key)
         authors2df["n_posts_author"].append(authors_count[key])
-
 
     authors_df = pd.DataFrame(authors2df)
 
@@ -433,17 +437,21 @@ def one_time(df, threshold=1):
     if "column1" not in df.columns.values:
         df = id_columns(df)
     df["one_time"] = np.where(
-        (df["n_posts_author"] < threshold+1) & (df["column2"] == "no") & (df["advice"] == "no"),
+        (df["n_posts_author"] < threshold + 1)
+        & (df["column2"] == "no")
+        & (df["advice"] == "no"),
         "yes",
         "no",
     )
     return df
 
+
 def id_advice(df):
     df["advice"] = ["yes" if "advice" in x else "no" for x in df["tags"]]
     return df
 
+
 def id_x(df, tag):
-    tag_no_space = tag.replace(" ","_").replace("-","_")
+    tag_no_space = tag.replace(" ", "_").replace("-", "_")
     df[tag_no_space] = ["yes" if tag in x else "no" for x in df["tags"]]
     return df

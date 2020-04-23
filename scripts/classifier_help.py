@@ -136,17 +136,17 @@ def modals(f_df, sample="none"):
     c_df = pd.DataFrame(counts4df)
     return c_df
 
+
 def hedges(f_df, hedges, sample="none"):
 
-    if hedges=="hedges":
+    if hedges == "hedges":
         infile = "../data/hedges.csv"
-    elif hedges=="boosters":
-        infile= "../data/boosters.csv"
+    elif hedges == "boosters":
+        infile = "../data/boosters.csv"
     else:
         print("input hedges attribute as either hedges or boosters")
 
-
-    h_list = [" "+word[:-1]+" " for word in open(infile, "r")]
+    h_list = [" " + word[:-1] + " " for word in open(infile, "r")]
     # print(h_list[:10])
     # third_pronouns = []
 
