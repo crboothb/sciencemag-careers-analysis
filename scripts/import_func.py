@@ -9,18 +9,31 @@ import pandas as pd
 
 # the function that houses all teh other initalizaiton functions
 
-def init_df(filename, focus, test=False, out_form="df", genre="none"):
-
-    categories = [
-        "ctscinet",
-        "career-related policy",
-        "working life",
-        "career profiles",
-        "life and career balance",
-        "myscinet",
-        "issues and perspectives",
+def init_df(filename, focus, test=False, out_form="df", genre="none", categories="limited"):
+    if categories == "all":
+        categories = [
+            "ctscinet",
+            "career-related policy",
+            "working life",
+            "career profiles",
+            "life and career balance",
+            "myscinet",
+            "issues and perspectives",
+            "advice"
+            ]
+    elif categories == "limited":
+        categories = [
+        # "ctscinet", # no defined genre
+        "career_related_policy",
+        "working_life",
+        "career_profiles",
+        # "life_and_career_balance",# no defined genre
+        # "myscinet", # no defined genre
+        # "issues_and_perspectives", # too much overlap with advice, no defined genre
         "advice"
         ]
+    else:
+        print("enter either all or limited for categories. but you probably want limited")
 
     raw = import_jl(filename)
     out = process(raw, focus=focus, out_form=out_form ,genre=genre)
