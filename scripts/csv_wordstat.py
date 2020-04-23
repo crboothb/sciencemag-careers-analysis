@@ -18,20 +18,14 @@ full_filename = "../data/by_article_fulltext_020920.jl"
 full_df = imp.init_df(full_filename, "full")
 full_df = full_df[full_df["year"] < 2020]
 full_df["probnews"] = np.where(
-        (full_df["advice"] == "no") & (full_df["one_time"] == "no"),
-        "yes",
-        "no",
-    )
+    (full_df["advice"] == "no") & (full_df["one_time"] == "no"), "yes", "no",
+)
 # print(full_df.head())
 
 full_df["type"] = np.where(
-    (full_df["advice"]=="yes"),
+    (full_df["advice"] == "yes"),
     "advice",
-    np.where(
-        (full_df["one_time"]=="yes"),
-        "WL",
-        "news",
-    )
+    np.where((full_df["one_time"] == "yes"), "WL", "news",),
 )
 # print(full_df.tail())
 

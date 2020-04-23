@@ -135,3 +135,43 @@ def modals(f_df, sample="none"):
 
     c_df = pd.DataFrame(counts4df)
     return c_df
+
+
+def hedges(f_df, hedges, sample="none"):
+
+    if hedges == "hedges":
+        infile = "../data/hedges.csv"
+    elif hedges == "boosters":
+        infile = "../data/boosters.csv"
+    else:
+        print("input hedges attribute as either hedges or boosters")
+
+    h_list = [" " + word[:-1] + " " for word in open(infile, "r")]
+    # print(h_list[:10])
+    # third_pronouns = []
+
+    if sample == "none":
+        sample = [i for i in range(len(f_df))]
+
+    counts = {}
+    counts4df = {"id": [], "year": [], hedges: [], "wc": []}
+
+    for samp in sample:
+        count = 0
+        try:
+            w_text = no_punctuation(f_df.iloc[samp]["text"], quotes=True)
+        except:
+            continue
+        w_text = replace_quotes(w_text)
+        w_text = no_punctuation(w_text, quotes=False)
+        for verb in h_list:
+            count += w_text.count(verb)
+        wc = len(w_text.split(" "))
+        counts[samp] = {"modals": count, "wc": wc}
+        counts4df["id"].append(samp)
+        counts4df["year"].append(f_df.iloc[samp]["year"])
+        counts4df[hedges].append(count)
+        counts4df["wc"].append(wc)
+
+    c_df = pd.DataFrame(counts4df)
+    return c_df

@@ -122,7 +122,7 @@ def clean_text_df(df, col="text"):
         ],
         axis=1,
     )
-    df = df.rename(columns={"text_Parsed_6": col+"_Parsed"})
+    df = df.rename(columns={"text_Parsed_6": col + "_Parsed"})
     # print(df.head())
 
     # TF-IDF
