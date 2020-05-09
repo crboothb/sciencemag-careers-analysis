@@ -43,7 +43,7 @@ def count_pro(clean_text, person):
     return count
 
 
-def pronouns(f_df, sample="none"):
+def pronouns(f_df, sample="none", q_replace=True):
     first_pronouns = [" i ", " im ", " ive ", " id ", " my ", " me ", " myself "]
     second_pronouns = [" you ", " youre ", " youve ", " youd ", " your ", " yourself "]
     # third_pronouns = []
@@ -61,7 +61,8 @@ def pronouns(f_df, sample="none"):
             w_text = no_punctuation(f_df.iloc[samp]["text"], quotes=True)
         except:
             continue
-        w_text = replace_quotes(w_text)
+        if q_replace == True:
+            w_text = replace_quotes(w_text)
         w_text = no_punctuation(w_text, quotes=False)
         for pro in first_pronouns:
             count1 += w_text.count(pro)
@@ -137,7 +138,7 @@ def modals(f_df, sample="none"):
     return c_df
 
 
-def hedges(f_df, hedges, sample="none"):
+def hedges(f_df, hedges, sample="none", q_replace=True):
 
     if hedges == "hedges":
         infile = "../data/hedges.csv"
@@ -162,7 +163,8 @@ def hedges(f_df, hedges, sample="none"):
             w_text = no_punctuation(f_df.iloc[samp]["text"], quotes=True)
         except:
             continue
-        w_text = replace_quotes(w_text)
+        if q_replace == True:
+            w_text = replace_quotes(w_text)
         w_text = no_punctuation(w_text, quotes=False)
         for verb in h_list:
             count += w_text.count(verb)
