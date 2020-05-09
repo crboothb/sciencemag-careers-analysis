@@ -52,7 +52,7 @@ def pronouns(f_df, sample="none", q_replace=True):
         sample = [i for i in range(len(f_df))]
 
     counts = {}
-    counts4df = {"id": [], "year": [], "first": [], "second": [], "wc": []}
+    counts4df = {"id": [], "year": [], "month_seq":[], "first": [], "second": [], "wc": []}
 
     for samp in sample:
         count1 = 0
@@ -116,7 +116,7 @@ def modals(f_df, sample="none"):
         sample = [i for i in range(len(f_df))]
 
     counts = {}
-    counts4df = {"id": [], "year": [], "modals": [], "wc": []}
+    counts4df = {"id": [], "year": [], "month_seq":[], "modals": [], "wc": []}
 
     for samp in sample:
         count = 0
@@ -157,7 +157,7 @@ def hedges(f_df, hedges, sample="none", q_replace=True):
         sample = [i for i in range(len(f_df))]
 
     counts = {}
-    counts4df = {"id": [], "year": [], hedges: [], "wc": []}
+    counts4df = {"id": [], "year": [], "month_seq":[], hedges: [], "wc": []}
 
     for samp in sample:
         count = 0
