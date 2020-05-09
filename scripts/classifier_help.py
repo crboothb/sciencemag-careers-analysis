@@ -72,6 +72,7 @@ def pronouns(f_df, sample="none", q_replace=True):
         counts[samp] = {"first": count1, "second": count2, "wc": wc}
         counts4df["id"].append(samp)
         counts4df["year"].append(f_df.iloc[samp]["year"])
+        counts4df["month_seq"].append(f_df.iloc[samp]["month_seq"])
         counts4df["first"].append(count1)
         counts4df["second"].append(count2)
         counts4df["wc"].append(wc)
@@ -131,6 +132,7 @@ def modals(f_df, sample="none"):
         counts[samp] = {"modals": count, "wc": wc}
         counts4df["id"].append(samp)
         counts4df["year"].append(f_df.iloc[samp]["year"])
+        counts4df["month_seq"].append(f_df.iloc[samp]["month_seq"])
         counts4df["modals"].append(count)
         counts4df["wc"].append(wc)
 
@@ -172,6 +174,7 @@ def hedges(f_df, hedges, sample="none", q_replace=True):
         counts[samp] = {"modals": count, "wc": wc}
         counts4df["id"].append(samp)
         counts4df["year"].append(f_df.iloc[samp]["year"])
+        counts4df["month_seq"].append(f_df.iloc[samp]["month_seq"])
         counts4df[hedges].append(count)
         counts4df["wc"].append(wc)
 
