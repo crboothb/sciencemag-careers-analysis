@@ -15,19 +15,42 @@ full_filename = "../data/by_article_fulltext_020920.jl"
 # advice_df = imp.init_df(full_advice, "full", advice=True)
 # advice_df = advice_df[advice_df["year"]<2020]
 
-full_df = imp.init_df(full_filename, "full")
+full_df = imp.init_df(full_filename, "full", categories="limited")
 full_df = full_df[full_df["year"] < 2020]
-full_df["probnews"] = np.where(
-    (full_df["advice"] == "no") & (full_df["one_time"] == "no"), "yes", "no",
-)
+
 # print(full_df.head())
 
+
 full_df["type"] = np.where(
-    (full_df["advice"] == "yes"),
-    "advice",
-    np.where((full_df["one_time"] == "yes"), "WL", "news",),
+    (full_df["working_life"] == "yes"),"working_life",
+    np.where(
+        (full_df["career_related_policy"] == "yes"), "career_related_policy",
+        np.where(
+            (full_df["advice"] == "yes"),"advice",
+            np.where(
+                (full_df["career_profiles"]=="yes"),"career_profiles",
+                "uncategorized"
+            ),
+        )
+    )
 )
+
+full_df = full_df.drop(
+    ["date",
+    "time",
+    "date_seq",
+    "column1",
+    "column2",
+    "one_time",
+    "working_life",
+    "career_related_policy",
+    "career_profiles",
+    "bio"],
+    axis=1,)
+
+print(full_df.tail())
 # print(full_df.tail())
+print(full_df.columns)
 
 print(len(full_df))
 full_df["lang"] = ["en" if detect(x) == "en" else "no" for x in full_df["text"]]
@@ -35,8 +58,7 @@ full_df = full_df[full_df.lang == "en"]
 print(len(full_df))
 
 
-full_df = full_df.drop(["date", "time", "date_seq", "lang"], axis=1,)
-
+full_df = full_df.drop(["lang"], axis=1,)
 
 full_df.to_csv("../data/full_raw.csv", index=False)
 
@@ -45,17 +67,17 @@ full_df_q = full_df.drop(["text"], axis=1,)
 
 full_df_q.to_csv("../data/full_no_quote.csv", index=False)
 
-full_df = cla.clean_text_df(full_df)
-full_df_c = full_df.drop(["text", "no_quotes"], axis=1,)
+# full_df = cla.clean_text_df(full_df)
+# full_df_c = full_df.drop(["text", "no_quotes"], axis=1,)
 
-full_df_c.to_csv("../data/full_clean.csv", index=False)
+# full_df_c.to_csv("../data/full_clean.csv", index=False)
 
-print("clean 1 done")
+# print("clean 1 done")
 
-full_df = cla.clean_text_df(full_df, col="no_quotes")
-full_df_c_nq = full_df.drop(["text", "no_quotes", "text_Parsed"], axis=1,)
-full_df_c_nq.to_csv("../data/full_clean_no_quote.csv", index=False)
+# full_df = cla.clean_text_df(full_df, col="no_quotes")
+# full_df_c_nq = full_df.drop(["text", "no_quotes", "text_Parsed"], axis=1,)
+# full_df_c_nq.to_csv("../data/full_clean_no_quote.csv", index=False)
 
-# print(full_df.head(20))
+# # print(full_df.head(20))
 
 # print(full_df.columns)
