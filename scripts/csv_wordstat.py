@@ -22,31 +22,38 @@ full_df = full_df[full_df["year"] < 2020]
 
 
 full_df["type"] = np.where(
-    (full_df["working_life"] == "yes"),"working_life",
+    (full_df["working_life"] == "yes"),
+    "working_life",
     np.where(
-        (full_df["career_related_policy"] == "yes"), "career_related_policy",
+        (full_df["career_related_policy"] == "yes"),
+        "career_related_policy",
         np.where(
-            (full_df["advice"] == "yes"),"advice",
+            (full_df["advice"] == "yes"),
+            "advice",
             np.where(
-                (full_df["career_profiles"]=="yes"),"career_profiles",
-                "uncategorized"
+                (full_df["career_profiles"] == "yes"),
+                "career_profiles",
+                "uncategorized",
             ),
-        )
-    )
+        ),
+    ),
 )
 
 full_df = full_df.drop(
-    ["date",
-    "time",
-    "date_seq",
-    "column1",
-    "column2",
-    "one_time",
-    "working_life",
-    "career_related_policy",
-    "career_profiles",
-    "bio"],
-    axis=1,)
+    [
+        "date",
+        "time",
+        "date_seq",
+        "column1",
+        "column2",
+        "one_time",
+        "working_life",
+        "career_related_policy",
+        "career_profiles",
+        "bio",
+    ],
+    axis=1,
+)
 
 print(full_df.tail())
 # print(full_df.tail())
