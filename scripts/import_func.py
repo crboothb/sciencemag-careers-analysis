@@ -425,7 +425,8 @@ def id_columns(df, threshold=5):
 
     df_authors["column1"] = ["yes" if "column" in x else "no" for x in df["tags"]]
     df_authors["column2"] = np.where(
-        (df_authors["n_posts_author"] >= threshold) | (df_authors["column1"] == "yes") & (df_authors["working_life"]=="no"),
+        (df_authors["n_posts_author"] >= threshold)
+        | (df_authors["column1"] == "yes") & (df_authors["working_life"] == "no"),
         "yes",
         "no",
     )
