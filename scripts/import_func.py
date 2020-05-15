@@ -69,7 +69,7 @@ def import_jl(fname):
     return open(fname, "r").readlines()
 
 def category_type(df):
-    df["type"] = np.where(
+    df["category"] = np.where(
         (df["working_life"] == "yes"),
         "working_life",
         np.where(
