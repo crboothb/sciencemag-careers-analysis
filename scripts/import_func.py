@@ -57,6 +57,8 @@ def init_df(
 
     if test == True:
         print(df.head())
+
+    df = category_type(df)
     return df
 
 
@@ -66,6 +68,25 @@ def import_jl(fname):
     with each line in file as a list item"""
     return open(fname, "r").readlines()
 
+def category_type(df):
+    df["type"] = np.where(
+        (df["working_life"] == "yes"),
+        "working_life",
+        np.where(
+            (df["career_related_policy"] == "yes"),
+            "career_related_policy",
+            np.where(
+                (df["advice"] == "yes"),
+                "advice",
+                np.where(
+                    (df["career_profiles"] == "yes"),
+                    "career_profiles",
+                    "uncategorized",
+                ),
+            ),
+        ),
+    )
+    return(df)
 
 # initially process content from imported jl files
 # takes list of lines in original file as list argument
