@@ -4,13 +4,32 @@ import string
 import pandas as pd
 
 
-def no_punctuation(text, quotes=False):
-    for mark in string.punctuation:
+def no_punctuation(text, quotes=False, frequency_prep=False):
+    text = str(text)
+    for mark in string.punctuation+"--”":
         if quotes is True:
             if mark == '"':
                 continue
-        text = text.replace(mark, "")
+            text = text.replace(mark, "")
+        if frequency_prep == True:
+            if mark == "-":
+                text.replace(mark, " ")
+                continue
+            if mark == "'":
+                text = text.replace(mark, "")
+                continue
+            text = text.replace(mark, " ")
+        else:
+            text = text.replace(mark, "")
     return text
+
+def remove_stopword(text, stops_dict, extras=[]):
+    bow = text.strip().split(" ")
+    new_bow = []
+    for word in bow:
+        if word not in stops_dict and word not in extras:
+            new_bow.append(word)
+    return(" ".join(new_bow))
 
 
 def replace_quotes(text):
