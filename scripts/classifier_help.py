@@ -3,6 +3,9 @@ import string
 
 import pandas as pd
 
+def only_letters_clean(text):
+    valids = re.sub(r"[^A-Za-z ]+", '', text)
+    return(valids)
 
 def no_punctuation(text, quotes=False, frequency_prep=False):
     text = str(text)
