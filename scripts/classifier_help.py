@@ -66,8 +66,23 @@ def count_pro(clean_text, person):
 
 
 def pronouns(f_df, sample="none", q_replace=True):
-    first_pronouns = [" i ", " im ", " ive ", " id ", " my ", " me ", " myself "]
-    second_pronouns = [" you ", " youre ", " youve ", " youd ", " your ", " yourself "]
+    first_pronouns = [
+        " i ",
+        " im ",
+        " ive ",
+        # " id ",
+        " my ",
+        " me ",
+        " myself "
+        ]
+    second_pronouns = [
+        " you ",
+        # " youre ",
+        # " youve ",
+        " youd ",
+        " your ",
+        " yourself "
+        ]
     # third_pronouns = []
 
     if sample == "none":
@@ -136,8 +151,8 @@ def modals(f_df, sample="none"):
         " wouldnt ",
         " must ",
         " ought ",
-        " had better ",
-        " have to ",
+        # " had better ",
+        # " have to ",
     ]
     # third_pronouns = []
 
@@ -169,21 +184,25 @@ def modals(f_df, sample="none"):
     return c_df
 
 
-def hedges(f_df, hedges, sample="none", q_replace=True):
+def hedges(f_df, hedges, inlist=False, sample="none", q_replace=True):
 
-    if hedges == "hedges":
-        infile = "../data/hedges.csv"
-    elif hedges == "boosters":
-        infile = "../data/boosters.csv"
-    else:
-        print("input hedges attribute as either hedges or boosters")
+    if inlist == False:
+        if hedges == "hedges":
+            infile = "../data/hedges.csv"
+        elif hedges == "boosters":
+            infile = "../data/boosters.csv"
+        else:
+            print("input hedges attribute as either hedges or boosters")
 
-    h_list = [" " + word[:-1] + " " for word in open(infile, "r")]
+        h_list = [" " + word[:-1] + " " for word in open(infile, "r")]
     # print(h_list[:10])
     # third_pronouns = []
+    else:
+        h_list = inlist
 
     if sample == "none":
         sample = [i for i in range(len(f_df))]
+    
 
     counts = {}
     counts4df = {"id": [], "year": [], "month_seq": [], hedges: [], "wc": []}
