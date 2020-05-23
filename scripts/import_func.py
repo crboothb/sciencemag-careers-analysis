@@ -15,14 +15,22 @@ def init_df(
 ):
     if categories == "all":
         categories = [
-            "ctscinet",
-            "career-related policy",
-            "working life",
-            "career profiles",
-            "life and career balance",
-            "myscinet",
-            "issues and perspectives",
             "advice",
+            "job market",
+            "academic",
+            "postdoc",
+            "graduate",
+            "workplace diversity",
+            "midcareer",
+            "non-disciplinary",
+            "life and career balance",
+            "industry",
+            "career profiles",
+            "government",
+            "undergraduate",
+            "working life",
+            "early career",
+            "career-related policy"
         ]
     elif categories == "limited":
         categories = [
