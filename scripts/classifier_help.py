@@ -70,15 +70,15 @@ def pronouns(f_df, sample="none", q_replace=True):
         " i ",
         " im ",
         " ive ",
-        # " id ",
+        " id ",
         " my ",
         " me ",
         " myself "
         ]
     second_pronouns = [
         " you ",
-        # " youre ",
-        # " youve ",
+        " youre ",
+        " youve ",
         " youd ",
         " your ",
         " yourself "
@@ -151,8 +151,8 @@ def modals(f_df, sample="none"):
         " wouldnt ",
         " must ",
         " ought ",
-        # " had better ",
-        # " have to ",
+        " had better ",
+        " have to ",
     ]
     # third_pronouns = []
 
