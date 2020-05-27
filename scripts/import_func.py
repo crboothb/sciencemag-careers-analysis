@@ -15,14 +15,22 @@ def init_df(
 ):
     if categories == "all":
         categories = [
-            "ctscinet",
-            "career-related policy",
-            "working life",
-            "career profiles",
-            "life and career balance",
-            "myscinet",
-            "issues and perspectives",
             "advice",
+            "job market",
+            "academic",
+            "postdoc",
+            "graduate",
+            "workplace diversity",
+            "midcareer",
+            "non-disciplinary",
+            "life and career balance",
+            "industry",
+            "career profiles",
+            "government",
+            "undergraduate",
+            "working life",
+            "early career",
+            "career-related policy"
         ]
     elif categories == "limited":
         categories = [
@@ -49,7 +57,7 @@ def init_df(
     for keyword in categories:
         df = id_x(df, keyword)
     # remove any articles published after 2019
-    df = df[df.year < 2020]
+    df = df[(df.year < 2020) & (df.year > 1997)]
     if focus != "editorial":
         # df = id_advice(df)
         df = id_columns(df)
@@ -57,6 +65,8 @@ def init_df(
 
     if test == True:
         print(df.head())
+
+    df = category_type(df)
     return df
 
 
@@ -66,6 +76,25 @@ def import_jl(fname):
     with each line in file as a list item"""
     return open(fname, "r").readlines()
 
+def category_type(df):
+    df["category"] = np.where(
+        (df["working_life"] == "yes"),
+        "working_life",
+        np.where(
+            (df["career_related_policy"] == "yes"),
+            "career_related_policy",
+            np.where(
+                (df["advice"] == "yes"),
+                "advice",
+                np.where(
+                    (df["career_profiles"] == "yes"),
+                    "career_profiles",
+                    "uncategorized",
+                ),
+            ),
+        ),
+    )
+    return(df)
 
 # initially process content from imported jl files
 # takes list of lines in original file as list argument

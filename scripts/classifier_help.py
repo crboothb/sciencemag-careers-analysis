@@ -3,14 +3,36 @@ import string
 
 import pandas as pd
 
+def only_letters_clean(text):
+    valids = re.sub(r"[^A-Za-z ]+", '', text)
+    return(valids)
 
-def no_punctuation(text, quotes=False):
-    for mark in string.punctuation:
+def no_punctuation(text, quotes=False, frequency_prep=False):
+    text = str(text)
+    for mark in string.punctuation+"--”":
         if quotes is True:
             if mark == '"':
                 continue
-        text = text.replace(mark, "")
+            text = text.replace(mark, "")
+        if frequency_prep == True:
+            if mark == "-":
+                text.replace(mark, " ")
+                continue
+            if mark == "'":
+                text = text.replace(mark, "")
+                continue
+            text = text.replace(mark, " ")
+        else:
+            text = text.replace(mark, "")
     return text
+
+def remove_stopword(text, stops_dict, extras=[]):
+    bow = text.strip().split(" ")
+    new_bow = []
+    for word in bow:
+        if word not in stops_dict and word not in extras:
+            new_bow.append(word)
+    return(" ".join(new_bow))
 
 
 def replace_quotes(text):
@@ -44,8 +66,23 @@ def count_pro(clean_text, person):
 
 
 def pronouns(f_df, sample="none", q_replace=True):
-    first_pronouns = [" i ", " im ", " ive ", " id ", " my ", " me ", " myself "]
-    second_pronouns = [" you ", " youre ", " youve ", " youd ", " your ", " yourself "]
+    first_pronouns = [
+        " i ",
+        " im ",
+        " ive ",
+        " id ",
+        " my ",
+        " me ",
+        " myself "
+        ]
+    second_pronouns = [
+        " you ",
+        " youre ",
+        " youve ",
+        " youd ",
+        " your ",
+        " yourself "
+        ]
     # third_pronouns = []
 
     if sample == "none":
@@ -147,21 +184,25 @@ def modals(f_df, sample="none"):
     return c_df
 
 
-def hedges(f_df, hedges, sample="none", q_replace=True):
+def hedges(f_df, hedges, inlist=False, sample="none", q_replace=True):
 
-    if hedges == "hedges":
-        infile = "../data/hedges.csv"
-    elif hedges == "boosters":
-        infile = "../data/boosters.csv"
-    else:
-        print("input hedges attribute as either hedges or boosters")
+    if inlist == False:
+        if hedges == "hedges":
+            infile = "../data/hedges.csv"
+        elif hedges == "boosters":
+            infile = "../data/boosters.csv"
+        else:
+            print("input hedges attribute as either hedges or boosters")
 
-    h_list = [" " + word[:-1] + " " for word in open(infile, "r")]
+        h_list = [" " + word[:-1] + " " for word in open(infile, "r")]
     # print(h_list[:10])
     # third_pronouns = []
+    else:
+        h_list = inlist
 
     if sample == "none":
         sample = [i for i in range(len(f_df))]
+    
 
     counts = {}
     counts4df = {"id": [], "year": [], "month_seq": [], hedges: [], "wc": []}
