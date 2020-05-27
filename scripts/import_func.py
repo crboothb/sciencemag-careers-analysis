@@ -57,7 +57,7 @@ def init_df(
     for keyword in categories:
         df = id_x(df, keyword)
     # remove any articles published after 2019
-    df = df[df.year < 2020]
+    df = df[(df.year < 2020) & (df.year > 1997)]
     if focus != "editorial":
         # df = id_advice(df)
         df = id_columns(df)
