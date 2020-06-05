@@ -136,12 +136,12 @@ def category(df):
 
 def modals(f_df, sample="none"):
     modal_list = [
-        " can ",
-        " could ",
-        " cant ",
-        " couldnt ",
-        " may ",
-        " might ",
+        # " can ",
+        # " could ",
+        # " cant ",
+        # " couldnt ",
+        # " may ",
+        # " might ",
         " shall ",
         " should ",
         " shouldnt ",
