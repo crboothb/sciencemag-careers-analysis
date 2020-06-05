@@ -20,10 +20,10 @@ import classifier_help as clh
 #################
 
 
-infile = "../data/initial_processed.csv"
-outfig_inc = "../figs/tag_bargraph.png"
-outfileR = "../data/bargraph_data/tag_bargraph_data"
-outfileRall = "../data/bargraph_data/all_bargraph_data"
+infile = "../../data/initial_processed.csv"
+# outfig_inc = "../figs/tag_bargraph.png"
+outfileR = "../../data/bargraph_data/tag_bargraph_data"
+outfileRall = "../../data/bargraph_data/all_bargraph_data"
 
 ################
 
