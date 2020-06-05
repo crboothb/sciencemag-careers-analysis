@@ -8,7 +8,7 @@ from pandas.plotting import register_matplotlib_converters
 
 register_matplotlib_converters()
 
-sys.path.append("../scripts/")
+sys.path.append("../../scripts/")
 import import_func as imp
 import classifier_help as clh
 
@@ -87,6 +87,8 @@ for cat in categories:
     counts_df["frac_h"] = counts_df["hedges"] / counts_df["wc"]
     counts_df["frac_b"] = counts_b_df["boosters"] / counts_df["wc"]
 
+    ###########
+
     pieces.append(counts_df)
 
 all_tag = pd.concat(pieces, keys=[cat for cat in categories])
@@ -94,9 +96,23 @@ all_tag = all_tag.reset_index()
 
 all_tag.to_csv(outfileR + "_hedges.csv", index=False)
 
-counts_df = clh.pronouns(full_df)
+# counts_df = clh.pronouns(full_df)
 
-counts_df["frac1"] = counts_df["first"] / counts_df["wc"]
-counts_df["frac2"] = counts_df["second"] / counts_df["wc"]
+# counts_df["frac1"] = counts_df["first"] / counts_df["wc"]
+# counts_df["frac2"] = counts_df["second"] / counts_df["wc"]
+
+############
+
+# counts_df = clh.modals(full_df)
+
+# counts_df["frac"] = counts_df["modals"]/counts_df["wc"]
+
+############
+
+counts_df = clh.hedges(full_df, "hedges")
+counts_b_df = clh.hedges(full_df, "boosters")
+
+counts_df["frac_h"] = counts_df["hedges"] / counts_df["wc"]
+counts_df["frac_b"] = counts_b_df["boosters"] / counts_df["wc"]
 
 counts_df.to_csv(outfileRall + "_hedges.csv", index=False)
