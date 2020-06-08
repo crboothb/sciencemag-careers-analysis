@@ -67,12 +67,12 @@ print(len(full_df))
 
 full_df = full_df.drop(["lang"], axis=1,)
 
-full_df.to_csv("../data/full_raw.csv", index=False)
+# full_df.to_csv("../data/full_raw.csv", index=False)
 
 full_df["no_quotes"] = [clh.replace_quotes(text) for text in full_df["text"]]
 full_df_q = full_df.drop(["text"], axis=1,)
 
-full_df_q.to_csv("../data/full_no_quote.csv", index=False)
+# full_df_q.to_csv("../data/full_no_quote.csv", index=False)
 
 # full_df = cla.clean_text_df(full_df)
 # full_df_c = full_df.drop(["text", "no_quotes"], axis=1,)
