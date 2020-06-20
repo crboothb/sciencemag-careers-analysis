@@ -76,16 +76,16 @@ for cat in categories:
     # counts_df["frac2"] = counts_df["second"]/counts_df["wc"]
 
     ###########
-    # counts_df = clh.modals(cat_df)
+    counts_df = clh.modals(cat_df)
 
-    # counts_df["frac"] = counts_df["modals"]/counts_df["wc"]
+    counts_df["frac"] = counts_df["modals"]/counts_df["wc"]
 
     ###########
-    counts_df = clh.hedges(cat_df, "hedges")
-    counts_b_df = clh.hedges(cat_df, "boosters")
+    # counts_df = clh.hedges(cat_df, "hedges")
+    # counts_b_df = clh.hedges(cat_df, "boosters")
 
-    counts_df["frac_h"] = counts_df["hedges"] / counts_df["wc"]
-    counts_df["frac_b"] = counts_b_df["boosters"] / counts_df["wc"]
+    # counts_df["frac_h"] = counts_df["hedges"] / counts_df["wc"]
+    # counts_df["frac_b"] = counts_b_df["boosters"] / counts_df["wc"]
 
     ###########
 
@@ -94,7 +94,7 @@ for cat in categories:
 all_tag = pd.concat(pieces, keys=[cat for cat in categories])
 all_tag = all_tag.reset_index()
 
-all_tag.to_csv(outfileR + "_hedges.csv", index=False)
+all_tag.to_csv(outfileR + "_modals.csv", index=False)
 
 # counts_df = clh.pronouns(full_df)
 
@@ -103,16 +103,16 @@ all_tag.to_csv(outfileR + "_hedges.csv", index=False)
 
 ############
 
-# counts_df = clh.modals(full_df)
+counts_df = clh.modals(full_df)
 
-# counts_df["frac"] = counts_df["modals"]/counts_df["wc"]
+counts_df["frac"] = counts_df["modals"]/counts_df["wc"]
 
 ############
 
-counts_df = clh.hedges(full_df, "hedges")
-counts_b_df = clh.hedges(full_df, "boosters")
+# counts_df = clh.hedges(full_df, "hedges")
+# counts_b_df = clh.hedges(full_df, "boosters")
 
-counts_df["frac_h"] = counts_df["hedges"] / counts_df["wc"]
-counts_df["frac_b"] = counts_b_df["boosters"] / counts_df["wc"]
+# counts_df["frac_h"] = counts_df["hedges"] / counts_df["wc"]
+# counts_df["frac_b"] = counts_b_df["boosters"] / counts_df["wc"]
 
-counts_df.to_csv(outfileRall + "_hedges.csv", index=False)
+counts_df.to_csv(outfileRall + "_modals.csv", index=False)
