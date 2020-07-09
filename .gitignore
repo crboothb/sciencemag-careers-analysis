@@ -28,6 +28,7 @@ Latest-News-Classifier/
 writing/
 figs/
 booklda/
+topics-test/
 
 # file extensions
 *.pyc
