@@ -1,13 +1,14 @@
 import csv
+import sys
+
 import numpy as np
 from langdetect import detect
 
+# import desc_vis as vis
+# import classifier_func as cla
+import classifier_help as clh
 import import_func as imp
 import tags_work as tgs
-
-# import desc_vis as vis
-import classifier_func as cla
-import classifier_help as clh
 
 full_advice = "../data/genre_advice_full_021520.jl"
 full_filename = "../data/by_article_fulltext_020920.jl"
@@ -59,14 +60,24 @@ print(full_df.tail())
 # print(full_df.tail())
 print(full_df.columns)
 
+# filter out articles that aren't in English
+# print(len(full_df))
+# full_df["lang"] = ["en" if detect(x) == "en" else "no" for x in full_df["text"]]
+# full_df = full_df[full_df.lang == "en"]
+# print("include only english articles")
+# print(len(full_df))
+
+# filter out articles with less than 200 words
 print(len(full_df))
-full_df["lang"] = ["en" if detect(x) == "en" else "no" for x in full_df["text"]]
-full_df = full_df[full_df.lang == "en"]
+full_df["word_count"] = [len(x) for x in full_df["text"]]
+full_df = full_df[full_df.word_count > 200]
+print("include only articles with <200 words")
 print(len(full_df))
 
 
-full_df = full_df.drop(["lang"], axis=1,)
+# full_df = full_df.drop(["lang", "word_count"], axis=1,)
 
+sys.exit()
 # full_df.to_csv("../data/full_raw.csv", index=False)
 
 full_df["no_quotes"] = [clh.replace_quotes(text) for text in full_df["text"]]
